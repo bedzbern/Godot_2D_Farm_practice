@@ -29,4 +29,11 @@ Short dated entries of what we did.
 - Created `player.tscn` (CharacterBody2D) with AnimatedSprite2D
 - Set up 20 animations: idle/walk/chop/till/water × 4 directions, all at 3 FPS
 - Added CollisionShape2D (circle) to player
-- Next: state machine & keyboard inputs
+- Created state machine scripts (`node_state.gd`, `node_state_machine.gd`)
+- Created `idle_state.gd` with input-based direction/animation
+- Fixed input detection bugs (is_action_just_pressed → is_action_pressed, walk_front → walk_up)
+- Fixed animation name mismatches (idle_up → idle_front, front → idle_front)
+- Created `scripts_notes.md` with C#-compared code explanations
+- Created `godot_errors.md` comprehensive debugging reference
+- Watched through ~40:55 — idle state working, about to refactor input into reusable class
+- Next: create game_input_events.gd and walk state

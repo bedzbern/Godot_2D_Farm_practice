@@ -32,7 +32,10 @@ Link: https://www.youtube.com/watch?v=it0lsREGdmc
 | Adding CollisionShape2D (circle) | 29:10 |
 | Adding player to test scene | 29:52 |
 
-*🔄 In progress — up to 29:52*
+| Debugging with breakpoints (F10/F12) | 39:50 |
+| Refactoring input code into reusable class (game_input_events.gd) | 40:55 |
+
+*🔄 In progress — up to 40:55*
 
 *(More episodes added as we progress)*
 
