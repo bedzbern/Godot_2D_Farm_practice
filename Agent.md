@@ -12,22 +12,34 @@ Godot 2D Farm Game (practice project)
 - Keep notes SHORT — bullet points, no paragraphs
 - Focus on actionable Godot patterns
 - Always check Agent.md first in a new session to know where we left off
-- Saying **"UPDATE MY MD'S"** triggers auto-update of all markdown files:
-  - **Agent.md** — add session row to history table, update Current State
-  - **journal.md** — append dated entry of what was done
-  - **progress.md** — mark episode progress when finishing one
-  - **takeaways.md / explain.md** — only when explicitly told to add something
+- **AI acts as a buddy** — proactively suggest improvements, best practices, optimizations, and point out things the user might miss. Don't wait to be asked.
+- Saying **"push git"** auto-stages all, commits with auto-generated description, and pushes
+- Saying **"UPDATE MY MD'S"** triggers full sync: user provides timestamp → check Godot project (scenes, scripts, assets) for current state → search YT transcript at that timestamp for context → update all MD files accordingly
+
+### File Purposes
+| File | Content |
+|------|---------|
+| **takeaways.md** | General Godot tips & reusable patterns (for future projects) — NOT project-specific settings |
+| **journal.md** | Session log — what we did, specific settings/configs used in this project |
+| **progress.md** | Topic index — searchable table of topics + timestamps per episode. For future reference ("what timestamp was that topic?"). Also has full episode chapter list |
+| **Agent.md** | Session memory for the AI — current state, history, decisions, references |
+| **explain.md** | Deep dives on Godot concepts explained in simple terms |
 
 ## Session History
 | # | Date | What we did | Next step |
 |---|------|-------------|-----------|
 | 1 | 2026-07-09 | Setup — created note files, registered course | Start Episode 1 |
-| 2 | 2026-07-09 | Started Ep 1 @ 5:31, renamed assets to lowercase snake_case, cleaned duplicates, committed/pushed | Continue Episode 1 |
+| 2 | 2026-07-09 | Started Ep 1 @ 5:31, renamed assets, cleaned duplicates, extracted YT transcript, added takeaways, restructured progress.md as topic index | Continue Ep 1 @ 20:08 — near end of Tutorial 2 |
+| 3 | 2026-07-09 | Finished Tutorial 2 (Tilemap Layer), created test_scene_tilemap.tscn, added texture filter takeaway | Start Ep 3 — Player with State Machine (21:08) |
 
 ## Current State
-- Watching Episode 1 (Tutorial 2 — Tilemap Layer) @ 5:31
+- **Session ended.** Watched through Tutorial 2 @ t=1208 (20:08) — wrapping up nature tilemap & texture filter fix
+- Tutorial 2 completed: water, grass, tilled dirt, nature tilemap layers + terrain sets/bit masks
+- Project has `test_scene_tilemap.tscn` created
+- Next session: **Ep 3 — Creating the player with a state machine (21:08)**
 - All assets renamed to lowercase snake_case with updated .import paths
-- "UPDATE MY MD'S" keyword convention added
+- YT transcript extracted and saved to desktop reference
+- "UPDATE MY MD'S" & "push git" keyword conventions added
 
 ## Reference Files
 - **YouTube Transcript**: `C:\Users\DNTS\Desktop\opencode_ref\yt_transcript_it0lsREGdmc.json`

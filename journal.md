@@ -12,3 +12,12 @@ Short dated entries of what we did.
 - Updated .import source_file paths to match
 - Committed & pushed "add game assets" (63 files)
 - Added "UPDATE MY MD'S" keyword convention to Agent.md
+- Extracted full YT transcript (10,360 entries) → `Desktop\opencode_ref\yt_transcript_it0lsREGdmc.json`
+- Committed & pushed "rename assets to lowercase snake_case, add yt transcript ref"
+- Added "push git" auto-commit convention
+- Added test scene methodology takeaway
+- Watched Tutorial 2 (Tilemap Layer) through to end @ 20:08
+- Learned: terrain sets / bit masks, tilemap layers (water, grass, tilled dirt, nature), viewport pixel art settings, texture filter → nearest
+- Created `test_scene_tilemap.tscn`
+- Restructured progress.md as topic index
+- Added texture filter takeaway for pixel art
