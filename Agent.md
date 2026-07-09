@@ -25,6 +25,7 @@ Godot 2D Farm Game (practice project)
 | **Agent.md** | Session memory for the AI — current state, history, decisions, references |
 | **explain.md** | Deep dives on Godot concepts explained in simple terms |
 | **scripts_notes.md** | Code explanations for every .gd script — GDScript + C# comparisons for reference |
+| **godot_errors.md** | Comprehensive error catalog + debugging tool reference — stack traces, null safety, input troubleshooting, profiling |
 
 ### Keywords
 - **"push git"** — auto-stage all, commit with auto-generated description, push
