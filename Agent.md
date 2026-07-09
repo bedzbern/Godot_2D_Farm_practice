@@ -24,6 +24,12 @@ Godot 2D Farm Game (practice project)
 | **progress.md** | Topic index — searchable table of topics + timestamps per episode. For future reference ("what timestamp was that topic?"). Also has full episode chapter list |
 | **Agent.md** | Session memory for the AI — current state, history, decisions, references |
 | **explain.md** | Deep dives on Godot concepts explained in simple terms |
+| **scripts_notes.md** | Code explanations for every .gd script — GDScript + C# comparisons for reference |
+
+### Keywords
+- **"push git"** — auto-stage all, commit with auto-generated description, push
+- **"UPDATE MY MD'S"** — full sync: check project state, search YT transcript at given timestamp, update all MD files
+- **"explain the code"** — scan recently modified .gd files, check scripts_notes.md for what's already explained, explain NEW/changed scripts with C# comparisons
 
 ## Session History
 | # | Date | What we did | Next step |
@@ -43,10 +49,12 @@ Godot 2D Farm Game (practice project)
   - Player added to test scene
 - Next up: **State machine & keyboard inputs**
 - Project has `player.tscn`, `test_scene_player.tscn`, `test_scene_tilemap.tscn`, `test_scene_default.tscn`
-- No GDScript files exist yet (purely visual setup so far)
+- GDScript files exist: `scripts/state_machine/node_state.gd`, `node_state_machine.gd`
+- `scripts_notes.md` created with C#-compared explanations for state machine scripts
+- New keyword: **"explain the code"** — auto-explains recently modified scripts with C# references
 - All assets renamed to lowercase snake_case with updated .import paths
 - YT transcript saved to `C:\Users\Administrator\Desktop\opencode_ref\yt_transcript_it0lsREGdmc.json` (new PC)
-- "UPDATE MY MD'S" & "push git" keyword conventions active
+- "UPDATE MY MD'S", "push git", and "explain the code" keyword conventions active
 
 ## Reference Files
 - **YouTube Transcript**: `C:\Users\Administrator\Desktop\opencode_ref\yt_transcript_it0lsREGdmc.json`
