@@ -21,3 +21,12 @@ Short dated entries of what we did.
 - Created `test_scene_tilemap.tscn`
 - Restructured progress.md as topic index
 - Added texture filter takeaway for pixel art
+
+## 2026-07-09 (Session 3)
+- Started Episode 2 @ 21:08 (moved to new PC, re-fetched YT transcript)
+- Watched through ~29:52 (collision shape added, player in test scene)
+- Created `test_scene_player.tscn` (duplicated from default)
+- Created `player.tscn` (CharacterBody2D) with AnimatedSprite2D
+- Set up 20 animations: idle/walk/chop/till/water × 4 directions, all at 3 FPS
+- Added CollisionShape2D (circle) to player
+- Next: state machine & keyboard inputs

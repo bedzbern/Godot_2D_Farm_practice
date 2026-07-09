@@ -23,7 +23,16 @@ Link: https://www.youtube.com/watch?v=it0lsREGdmc
 
 | Topic | Timestamp |
 |-------|-----------|
-| *(next session)* | |
+| Intro to player & state machine | 21:08 |
+| Creating test scene player (duplicate test_scene_default) | 21:46 |
+| Creating player scene (CharacterBody2D) | 23:00 |
+| Adding AnimatedSprite2D with sprite frames | 23:55 |
+| Setting up 20 animations (idle/walk/chop/till/water × 4 dirs) | 25:00 |
+| Setting FPS to 3 for all animations | 26:45 |
+| Adding CollisionShape2D (circle) | 29:10 |
+| Adding player to test scene | 29:52 |
+
+*🔄 In progress — up to 29:52*
 
 *(More episodes added as we progress)*
 
