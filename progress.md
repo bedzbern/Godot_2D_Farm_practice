@@ -60,8 +60,18 @@ Link: https://www.youtube.com/watch?v=it0lsREGdmc
 
 *✅ Completed*
 
-## Ep 5 — Creating Houses (1:06:18)
-*(Not started yet)*
+## Ep 5 — Creating Houses (1:06:18 – 1:31:12)
+
+| Topic | Timestamp |
+|-------|-----------|
+| Creating house tileset (walls + furniture) | ~1:07:00 |
+| Setting up physics collision on house tiles | ~1:08:00 |
+| Building large_house.tscn with TileMapLayers | ~1:10:00 |
+| Adding house as SceneCollectionSource in game_tile_set | ~1:14:00 |
+| Creating test_scene_house_tilemap with Houses layer | ~1:15:00 |
+| Adjusting player collision radius (9→4) & position | ~1:17:00 |
+
+*🔄 In progress — up to 1:18:06*
 
 ## All 25 Episode Chapters (Full Video)
 | # | Title | Timestamp |

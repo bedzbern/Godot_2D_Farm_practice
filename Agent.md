@@ -42,22 +42,21 @@ Godot 2D Farm Game (practice project)
 | 5 | 2026-07-09 | Fixed idle_state.gd input/animation bugs, created scripts_notes.md & godot_errors.md, idle state working with debugger — up to 40:55 | Continue — refactor input into game_input_events.gd, create walk state |
 | 6 | 2026-07-10 | Finished Ep 2 (up to 53:05 / t=3185). Created GameInputEvents, WalkState, Player class. Idle↔Walk working. | Start Ep 3 — Tool states (chop, till, water) |
 | 7 | 2026-07-10 | Finished Ep 3 & 4 (up to 1:06:15 / t=3975). Created all 3 tool states (chopping, tilling, watering), DataTypes enum, tool transitions from idle. Fixed if/elif bug in chopping. | Start Ep 5 — Creating houses |
+| 8 | 2026-07-10 | Finished part of Ep 5 (up to 1:18:06 / t=4686). Created house tileset, large_house.tscn scene, SceneCollectionSource in game_tile_set, test scene with houses layer. Adjusted player collision. | Continue Ep 5 or start Ep 6 (choppable trees) |
 
 ## Current State
-- **Completed Episodes 3 & 4** (up to t=3975 / 1:06:15). All 3 tool states built: Chopping, Tilling, Watering.
-- Full tool state machine working: Idle → Chopping/Tilling/Watering → auto-return to Idle
-- New/updated files this session:
-  - `scripts/globals/data_types.gd` — `DataTypes.Tools` enum (`None`, `AxeWood`, `TillGround`, `WaterCrops`, `PlantCorn`, `PlantTomato`)
-  - `scripts/game_input_events.gd` — renamed from `input_events.gd`, added `use_tool()` (reads "hit" action)
-  - `scenes/characters/player/player.gd` — added `@export var current_tool: DataTypes.Tools`
-  - `scenes/characters/player/chopping_state.gd` — direction-based chop animation, auto-idle transition (fixed if/elif)
-  - `scenes/characters/player/tilling_state.gd` — direction-based till animation, auto-idle
-  - `scenes/characters/player/watering_state.gd` — direction-based water animation, auto-idle
-  - `idle_state.gd` — tool condition checks → emits Chopping/Tilling/Watering transitions
-  - `player.tscn` — 3 new tool state nodes, `current_tool = 2` (AxeWood), tool animations loop=0
-  - `scripts/input_events.gd` — deleted (replaced by `game_input_events.gd`)
-- Next up: **Episode 5 — Creating houses using tilesets and tilemap layers (1:06:18)**
-- Project structure: 10 GDScripts, 4 scenes, 1 autoload/resource
+- **In progress — Episode 5** (up to t=4686 / 1:18:06). House system built.
+- New files this session:
+  - `tileset/house_tile_set.tres` — TileSet with wooden house walls + furniture textures + physics collision
+  - `scenes/Houses/large_house.tscn` — house scene (Node2D > HouseTileMap > Floor/Walls/Furniture layers)
+  - `scenes/test/test_scene_house_tilemap.tscn` — test scene with game tilemap + Houses TileMapLayer + player
+- Modified files:
+  - `tileset/game_tile_set.tres` — added `large_house.tscn` as SceneCollectionSource (TileSetScenesCollectionSource)
+  - `player.tscn` — collision radius 9.0→4.0, collision position (0,-8)→(0,-4)
+  - `project.godot` — folder colors, physics layer 1 named "Ground"
+- Next up: **Continue Ep 5 or Ep 6 — Creating choppable trees (1:31:12)**
+- Project structure: 10 GDScripts, 6 scenes, 2 TileSets, 1 autoload/resource
+- Test scenes: `test_scene_tilemap`, `test_scene_player`, `test_scene_house_tilemap`
 - All keyword conventions active: "UPDATE MY MD'S", "push git", "explain the code"
 
 ## Reference Files

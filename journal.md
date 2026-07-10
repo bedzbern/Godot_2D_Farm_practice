@@ -61,3 +61,12 @@ Short dated entries of what we did.
 - Changed all tool animation loops from 1 → 0 (play once, don't loop)
 - Updated `test_scene_player.tscn` — instance changes
 - Next: Start Episode 5 — Creating houses (1:06:18)
+
+## 2026-07-10 (Session 8)
+- Watched Episode 5 from 1:06:18 to 1:18:06 (t=4686) — Creating houses
+- Created `tileset/house_tile_set.tres` — new TileSet with wooden house walls + furniture textures, physics collision on walls/furniture
+- Created `scenes/Houses/large_house.tscn` — house scene with Floor, Walls, Furniture TileMapLayers
+- Updated `tileset/game_tile_set.tres` — added `large_house.tscn` as SceneCollectionSource for tilemap placement
+- Created `scenes/test/test_scene_house_tilemap.tscn` — test scene with game tilemap + Houses layer (instanced house) + player (current_tool = WaterCrops)
+- Updated `player.tscn` — collision radius 9.0→4.0, collision position (0,-8)→(0,-4)
+- Next: Continue Ep 5 or start Ep 6 (choppable trees @ 1:31:12)
