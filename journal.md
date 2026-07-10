@@ -37,3 +37,12 @@ Short dated entries of what we did.
 - Created `godot_errors.md` comprehensive debugging reference
 - Watched through ~40:55 — idle state working, about to refactor input into reusable class
 - Next: create game_input_events.gd and walk state
+
+## 2026-07-10 (Session 6)
+- Watched Episode 2 from 40:55 to 53:05 (t=3185) — near end of Episode 2
+- Created `scripts/input_events.gd` (`class_name GameInputEvents`) — static input helper with `movement_input()` and `is_movement_input()`
+- Created `scenes/characters/player/walk_state.gd` — walk state with movement (speed=50), direction tracking, idle transition on release
+- Created `scenes/characters/player/player.gd` (`class_name Player`) — `extends CharacterBody2D` with `player_direction` var
+- Updated `idle_state.gd` — now uses `player.player_direction` instead of direct Input calls, transitions to "Walk" on input
+- Updated `player.tscn` — Player script attached, Walk state node added to StateMachine, all node paths configured
+- Next: Start Episode 3 — Tool states (chop, till, water)

@@ -120,3 +120,193 @@ This is the **controller** that manages all states. It holds a dictionary of sta
 6. `transition_to` calls `_on_exit()` on the old state, then `_on_enter()` on the new one
 
 **C# analogy:** This is a **Game State Machine** pattern. In Unity you'd use `IState` interfaces and a `StateMachine` class. Same concept, different syntax.
+
+---
+
+## GameInputEvents (`scripts/input_events.gd`)
+
+```gdscript
+class_name GameInputEvents
+
+static var direction : Vector2
+	
+static func movement_input() -> Vector2:
+	if Input.is_action_pressed("walk_left"):
+		direction = Vector2.LEFT
+	elif Input.is_action_pressed("walk_right"):
+		direction = Vector2.RIGHT
+	elif Input.is_action_pressed("walk_up"):
+		direction = Vector2.UP
+	elif Input.is_action_pressed("walk_down"):
+		direction = Vector2.DOWN
+	else:
+		direction = Vector2.ZERO
+		
+	return direction
+	
+static func is_movement_input() -> bool:
+	if direction == Vector2.ZERO:
+		return false
+	else:
+		return true
+```
+
+**What it does:**
+A **static helper class** that centralizes input polling. Any state can call `GameInputEvents.movement_input()` instead of repeating raw `Input.is_action_pressed()` checks. Also tracks whether movement was pressed via `is_movement_input()` — used by states to decide whether to transition.
+
+**Key points:**
+
+| Line(s) | What it does | C# Equivalent |
+|---------|--------------|---------------|
+| `class_name GameInputEvents` | Makes it a globally accessible type (no `preload` needed) | `public static class GameInputEvents` |
+| `static var direction` | Shared state — the last direction returned | `private static Vector2 _direction;` |
+| `static func movement_input() -> Vector2` | Polls input map and returns direction | `public static Vector2 MovementInput()` |
+| `static func is_movement_input() -> bool` | Returns whether movement keys are held | `public static bool IsMovementInput()` |
+
+**Why static?** No need to instance this as a node — it's pure logic. Any script anywhere can call `GameInputEvents.movement_input()` without a node reference.
+
+**C# analogy:** This is like a `public static class InputHelper` with static methods you call from anywhere — no MonoBehaviour, no instantiation.
+
+---
+
+## Player (`scenes/characters/player/player.gd`)
+
+```gdscript
+class_name Player
+
+extends CharacterBody2D
+
+var player_direction : Vector2
+```
+
+**What it does:**
+The root script for the player scene. Creates a `Player` type that states can reference via `@export var player: Player`. Stores the last movement direction so `IdleState` can play the correct idle animation based on where the player was last walking.
+
+**Line by line:**
+
+| Line | What it does | C# Equivalent |
+|------|--------------|---------------|
+| `class_name Player` | Makes `Player` a globally available type | `public class Player : CharacterBody2D` |
+| `var player_direction : Vector2` | Holds the last facing direction. Written by `WalkState`, read by `IdleState` | `public Vector2 PlayerDirection { get; set; }` |
+
+**C# analogy:** A lightweight `MonoBehaviour` (well, `Node`-derived) that exposes a public property for other components to read/write — like a shared blackboard between states.
+
+---
+
+## WalkState (`scenes/characters/player/walk_state.gd`)
+
+```gdscript
+extends NodeState
+
+@export var player: Player
+@export var animated_player_2d: AnimatedSprite2D
+@export var speed: int = 50
+
+func _on_process(_delta : float) -> void:
+	pass
+
+func _on_physics_process(_delta : float) -> void:
+	var direction: Vector2 = GameInputEvents.movement_input();
+	
+	if direction == Vector2.UP:
+		animated_player_2d.play("walk_back")
+	elif direction == Vector2.RIGHT:
+		animated_player_2d.play("walk_right")
+	elif direction == Vector2.DOWN:
+		animated_player_2d.play("walk_front")
+	elif direction == Vector2.LEFT:
+		animated_player_2d.play("walk_left")
+	
+	if direction != Vector2.ZERO:
+		player.player_direction = direction
+	
+	player.velocity = direction * speed;
+	player.move_and_slide()
+
+func _on_next_transitions() -> void:
+	if !GameInputEvents.is_movement_input():
+		transition.emit("idle")
+
+func _on_enter() -> void:
+	pass
+
+func _on_exit() -> void:
+	animated_player_2d.stop()
+```
+
+**What it does:**
+The walk state handles continuous movement. Each physics frame it reads input, plays the correct walk animation, updates `player_direction` (so idle knows which way to face), sets velocity, and calls `move_and_slide()`. When no movement input is detected, it transitions back to `idle`.
+
+**Line by line:**
+
+| Line | What it does | C# Equivalent |
+|------|--------------|---------------|
+| `var speed: int = 50` | Movement speed (exported, tweakable in Inspector) | `public int Speed = 50;` |
+| `direction = GameInputEvents.movement_input()` | Gets input direction from the static helper | `var direction = GameInputEvents.MovementInput();` |
+| `animated_player_2d.play("walk_...")` | Plays correct walk animation for direction | `_sprite.Play("walk_...");` |
+| `player.player_direction = direction` | Stores facing direction for idle state | `player.PlayerDirection = direction;` |
+| `player.velocity = direction * speed` | Sets CharacterBody2D velocity | `player.Velocity = direction * speed;` |
+| `player.move_and_slide()` | Applies movement with collision | `player.MoveAndSlide();` |
+| `_on_next_transitions()` | Called every physics tick after `_on_physics_process` — asks "should I switch states?" | `public override void OnNextTransitions()` |
+| `transition.emit("idle")` | Fires the signal — state machine picks it up and switches | `Transition?.Invoke("idle");` |
+| `animated_player_2d.stop()` | Stops animation on exit — prevents last frame lingering | `_sprite.Stop();` |
+
+**Flow:**
+1. Player presses WASD → `IdleState._on_next_transitions()` detects input → emits `transition.emit("Walk")`
+2. State machine calls `IdleState._on_exit()` then `WalkState._on_enter()`
+3. Every physics frame, WalkState moves the player and plays walk animations
+4. Player releases all keys → `WalkState._on_next_transitions()` sees no input → emits `transition.emit("idle")`
+5. State machine switches back to IdleState, which plays the correct idle direction
+
+**C# analogy:** A state in a Unity `StateMachine` behaviour — implements `OnEnter()`/`OnExit()`/`Update()` lifecycle.
+
+---
+
+## IdleState (updated — `scenes/characters/player/idle_state.gd`)
+
+```gdscript
+extends NodeState
+
+@export var player : Player
+@export var animated_sprite_2d :AnimatedSprite2D
+
+var direction : Vector2
+
+func _on_process(_delta : float) -> void:
+	pass
+
+func _on_physics_process(_delta : float) -> void:
+	if player.player_direction == Vector2.UP:
+		animated_sprite_2d.play("idle_back")
+	elif player.player_direction == Vector2.RIGHT:
+		animated_sprite_2d.play("idle_right")
+	elif player.player_direction == Vector2.LEFT:
+		animated_sprite_2d.play("idle_left")
+	elif player.player_direction == Vector2.DOWN:
+		animated_sprite_2d.play("idle_front")
+	else :
+		animated_sprite_2d.play("idle_front")
+
+
+func _on_next_transitions() -> void:
+	GameInputEvents.movement_input()
+	
+	if GameInputEvents.is_movement_input():
+		transition.emit("Walk")
+	
+
+func _on_enter() -> void:
+	pass
+
+func _on_exit() -> void:
+	animated_sprite_2d.stop()
+```
+
+**What changed from original:**
+1. **`@export var player: Player`** — now uses the `Player` class instead of raw `CharacterBody2D`
+2. **Uses `player.player_direction`** — reads the direction stored by WalkState instead of polling Input directly
+3. **`_on_next_transitions()` delegates to `GameInputEvents`** — calls `movement_input()` then `is_movement_input()` to decide if it should transition to Walk
+4. **`transition.emit("Walk")`** — capital W (must match state node name exactly — `Walk` not `walk`)
+5. **`_on_exit()` stops animation** — prevents the last idle frame from persisting during walk
+
+**C# analogy:** Same pattern as before, but now the state reads from a shared direction variable (like a public property) instead of re-implementing input logic — cleaner separation of concerns.

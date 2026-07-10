@@ -40,24 +40,20 @@ Godot 2D Farm Game (practice project)
 | 3 | 2026-07-09 | Finished Tutorial 2 (Tilemap Layer), created test_scene_tilemap.tscn, added texture filter takeaway | Start Ep 3 — Player with State Machine (21:08) |
 | 4 | 2026-07-09 | Started Ep 2 @ 21:08, moved to new PC, re-fetched YT transcript, set up player with 20 animations & collision, added to test scene — up to 29:52 | Continue Ep 2 — State machine & keyboard inputs |
 | 5 | 2026-07-09 | Fixed idle_state.gd input/animation bugs, created scripts_notes.md & godot_errors.md, idle state working with debugger — up to 40:55 | Continue — refactor input into game_input_events.gd, create walk state |
+| 6 | 2026-07-10 | Finished Ep 2 (up to 53:05 / t=3185). Created GameInputEvents, WalkState, Player class. Idle↔Walk working. | Start Ep 3 — Tool states (chop, till, water) |
 
 ## Current State
-- **In progress.** Watched through Episode 2 @ t=2455 (40:55) — idle state working with debugged input/animation
-- Episode 2 topics completed up to 40:55:
-  - Creating test scene player (duplicated from default)
-  - Creating player scene (CharacterBody2D)
-  - 20 animations set up (idle/walk/chop/till/water × 4 dirs, 3 FPS)
-  - CollisionShape2D (circle) added to player
-  - State machine set up (`NodeStateMachine`, `NodeState`, `IdleState`)
-  - Idle state reading input (WASD/arrows) → playing correct idle animation
-  - Debugged with breakpoints (F10/F12)
-- Next up: **Refactor input into `game_input_events.gd` (static helper), then create WalkState**
-- Project has `player.tscn`, `test_scene_player.tscn`, `test_scene_tilemap.tscn`, `test_scene_default.tscn`
-- GDScript files: `scripts/state_machine/node_state.gd`, `scripts/state_machine/node_state_machine.gd`, `scenes/characters/player/idle_state.gd`
-- `scripts_notes.md` — code explanations with C# comparisons
-- `godot_errors.md` — comprehensive error catalog + debugging reference
-- All assets renamed to lowercase snake_case with updated .import paths
-- YT transcript saved to `C:\Users\Administrator\Desktop\opencode_ref\yt_transcript_it0lsREGdmc.json`
+- **Completed Episode 2** (up to t=3185 / 53:05). Full player state machine working: Idle ↔ Walk with all 4-direction animations.
+- Files created/updated this session:
+  - `scripts/input_events.gd` — static helper `GameInputEvents` (`movement_input()`, `is_movement_input()`)
+  - `scenes/characters/player/walk_state.gd` — walk movement at speed=50, idle transition on release
+  - `scenes/characters/player/player.gd` — `class_name Player`, `extends CharacterBody2D`, `player_direction` var
+  - `idle_state.gd` — refactored to use `player.player_direction` + `GameInputEvents`, emits "Walk" transition
+  - `player.tscn` — Player script, Walk state node, all node paths set
+- Next up: **Start Episode 3 — Tool states (chop, till, water) at 53:47**
+- Project structure: 6 GDScripts, 4 scenes
+- `scripts_notes.md` needs entries for input_events.gd, walk_state.gd, player.gd, updated idle_state.gd
+- YT transcript: NOT available on this PC (was on Administrator PC). Consider re-downloading. Transcript ref path in Agent.md is stale.
 - All keyword conventions active: "UPDATE MY MD'S", "push git", "explain the code"
 
 ## Reference Files

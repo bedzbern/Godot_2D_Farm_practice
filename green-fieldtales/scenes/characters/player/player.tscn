@@ -1,9 +1,11 @@
 [gd_scene format=3 uid="uid://bsv8rs03fgjrj"]
 
+[ext_resource type="Script" uid="uid://cwoawxphnqjxb" path="res://scenes/characters/player/player.gd" id="1_6avc5"]
 [ext_resource type="Texture2D" uid="uid://bvvc18saxfpx1" path="res://assets/game/characters/basic_character_sprites.png" id="1_7uws0"]
 [ext_resource type="Texture2D" uid="uid://8mi4c50fpt11" path="res://assets/game/characters/character_sprites.png" id="1_t61fv"]
 [ext_resource type="Script" uid="uid://c37j5mu00b0s8" path="res://scripts/state_machine/node_state_machine.gd" id="3_hss88"]
 [ext_resource type="Script" uid="uid://qha0fqci75c" path="res://scenes/characters/player/idle_state.gd" id="4_qd3e3"]
+[ext_resource type="Script" uid="uid://di4y7jacgre3o" path="res://scenes/characters/player/walk_state.gd" id="5_qd3e3"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3xnwo"]
 atlas = ExtResource("1_t61fv")
@@ -392,6 +394,7 @@ animations = [{
 radius = 9.0
 
 [node name="Player" type="CharacterBody2D" unique_id=583845537]
+script = ExtResource("1_6avc5")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=99469811]
 position = Vector2(0, -8)
@@ -411,3 +414,8 @@ initial_node_state = NodePath("Idle")
 script = ExtResource("4_qd3e3")
 player = NodePath("../..")
 animated_sprite_2d = NodePath("../../AnimatedSprite2D")
+
+[node name="Walk" type="Node" parent="StateMachine" unique_id=1207977464 node_paths=PackedStringArray("player", "animated_player_2d")]
+script = ExtResource("5_qd3e3")
+player = NodePath("../..")
+animated_player_2d = NodePath("../../AnimatedSprite2D")

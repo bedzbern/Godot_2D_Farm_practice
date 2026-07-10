@@ -35,7 +35,13 @@ Link: https://www.youtube.com/watch?v=it0lsREGdmc
 | Debugging with breakpoints (F10/F12) | 39:50 |
 | Refactoring input code into reusable class (game_input_events.gd) | 40:55 |
 
-*🔄 In progress — up to 40:55*
+| Creating GameInputEvents static helper class (input_events.gd) | ~42:00 |
+| Creating Player class (player.gd) with player_direction var | ~44:00 |
+| Creating WalkState (walk_state.gd) with movement & animations | ~46:00 |
+| Connecting state transitions: Idle ↔ Walk (on_enter/on_exit) | ~48:00 |
+| Testing player movement with full state machine | ~50:00 |
+
+*✅ Completed*
 
 *(More episodes added as we progress)*
 
