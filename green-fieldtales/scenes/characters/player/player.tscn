@@ -6,6 +6,9 @@
 [ext_resource type="Script" uid="uid://c37j5mu00b0s8" path="res://scripts/state_machine/node_state_machine.gd" id="3_hss88"]
 [ext_resource type="Script" uid="uid://qha0fqci75c" path="res://scenes/characters/player/idle_state.gd" id="4_qd3e3"]
 [ext_resource type="Script" uid="uid://di4y7jacgre3o" path="res://scenes/characters/player/walk_state.gd" id="5_qd3e3"]
+[ext_resource type="Script" uid="uid://cau8l5d6g4jsu" path="res://scenes/characters/player/chopping_state.gd" id="7_mk55u"]
+[ext_resource type="Script" uid="uid://cme5fyt4qfrjm" path="res://scenes/characters/player/tilling_state.gd" id="8_xuses"]
+[ext_resource type="Script" uid="uid://cbhixwjeyt21q" path="res://scenes/characters/player/watering_state.gd" id="9_42irl"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3xnwo"]
 atlas = ExtResource("1_t61fv")
@@ -176,7 +179,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_djydg")
 }],
-"loop": 1,
+"loop": 0,
 "name": &"chopping_back",
 "speed": 3.0
 }, {
@@ -187,7 +190,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_blysn")
 }],
-"loop": 1,
+"loop": 0,
 "name": &"chopping_front",
 "speed": 3.0
 }, {
@@ -198,7 +201,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_ykrpk")
 }],
-"loop": 1,
+"loop": 0,
 "name": &"chopping_left",
 "speed": 3.0
 }, {
@@ -209,7 +212,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_4kqyw")
 }],
-"loop": 1,
+"loop": 0,
 "name": &"chopping_right",
 "speed": 3.0
 }, {
@@ -264,7 +267,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_ro20i")
 }],
-"loop": 1,
+"loop": 0,
 "name": &"tilling_back",
 "speed": 3.0
 }, {
@@ -275,7 +278,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_tebod")
 }],
-"loop": 1,
+"loop": 0,
 "name": &"tilling_front",
 "speed": 3.0
 }, {
@@ -286,7 +289,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_3hnlq")
 }],
-"loop": 1,
+"loop": 0,
 "name": &"tilling_left",
 "speed": 3.0
 }, {
@@ -297,7 +300,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_u6wme")
 }],
-"loop": 1,
+"loop": 0,
 "name": &"tilling_right",
 "speed": 3.0
 }, {
@@ -341,7 +344,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_10pim")
 }],
-"loop": 1,
+"loop": 0,
 "name": &"walk_right",
 "speed": 3.0
 }, {
@@ -352,7 +355,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_es5sa")
 }],
-"loop": 1,
+"loop": 0,
 "name": &"watering_back",
 "speed": 3.0
 }, {
@@ -363,7 +366,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_ieypo")
 }],
-"loop": 1,
+"loop": 0,
 "name": &"watering_front",
 "speed": 3.0
 }, {
@@ -374,7 +377,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_71adu")
 }],
-"loop": 1,
+"loop": 0,
 "name": &"watering_left",
 "speed": 3.0
 }, {
@@ -385,7 +388,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_qe74o")
 }],
-"loop": 1,
+"loop": 0,
 "name": &"watering_right",
 "speed": 3.0
 }]
@@ -395,11 +398,12 @@ radius = 9.0
 
 [node name="Player" type="CharacterBody2D" unique_id=583845537]
 script = ExtResource("1_6avc5")
+current_tool = 2
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=99469811]
 position = Vector2(0, -8)
 sprite_frames = SubResource("SpriteFrames_wvhbo")
-animation = &"idle_front"
+animation = &"watering_right"
 autoplay = "idle_front"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=4596580]
@@ -419,3 +423,18 @@ animated_sprite_2d = NodePath("../../AnimatedSprite2D")
 script = ExtResource("5_qd3e3")
 player = NodePath("../..")
 animated_player_2d = NodePath("../../AnimatedSprite2D")
+
+[node name="Chopping" type="Node" parent="StateMachine" unique_id=1115602164 node_paths=PackedStringArray("player", "animated_sprite_2d")]
+script = ExtResource("7_mk55u")
+player = NodePath("../..")
+animated_sprite_2d = NodePath("../../AnimatedSprite2D")
+
+[node name="Tilling" type="Node" parent="StateMachine" unique_id=2057513570 node_paths=PackedStringArray("player", "animated_sprite_2d")]
+script = ExtResource("8_xuses")
+player = NodePath("../..")
+animated_sprite_2d = NodePath("../../AnimatedSprite2D")
+
+[node name="Watering" type="Node" parent="StateMachine" unique_id=1115827219 node_paths=PackedStringArray("player", "animated_sprite_2d")]
+script = ExtResource("9_42irl")
+player = NodePath("../..")
+animated_sprite_2d = NodePath("../../AnimatedSprite2D")

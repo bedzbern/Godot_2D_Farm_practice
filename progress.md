@@ -43,7 +43,25 @@ Link: https://www.youtube.com/watch?v=it0lsREGdmc
 
 *✅ Completed*
 
-*(More episodes added as we progress)*
+## Ep 3 & 4 — Tool States: Chopping, Tilling, Watering (53:47 – 1:06:18)
+
+| Topic | Timestamp |
+|-------|-----------|
+| Creating DataTypes Tools enum | ~55:00 |
+| Creating GameInputEvents.use_tool() | ~56:00 |
+| Adding current_tool to Player | ~57:00 |
+| Creating ChoppingState with direction animation | ~58:00 |
+| Creating TillingState | ~1:00:00 |
+| Creating WateringState | ~1:01:00 |
+| Connecting tool transitions in IdleState | ~1:02:00 |
+| Setting up tool state nodes in player.tscn | ~1:03:00 |
+| Animation loop settings for tool actions (loop off) | ~1:04:00 |
+| Testing all 3 tool states | ~1:05:00 |
+
+*✅ Completed*
+
+## Ep 5 — Creating Houses (1:06:18)
+*(Not started yet)*
 
 ## All 25 Episode Chapters (Full Video)
 | # | Title | Timestamp |

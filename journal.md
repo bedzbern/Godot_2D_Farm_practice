@@ -46,3 +46,18 @@ Short dated entries of what we did.
 - Updated `idle_state.gd` — now uses `player.player_direction` instead of direct Input calls, transitions to "Walk" on input
 - Updated `player.tscn` — Player script attached, Walk state node added to StateMachine, all node paths configured
 - Next: Start Episode 3 — Tool states (chop, till, water)
+
+## 2026-07-10 (Session 7)
+- Watched Episode 3 & 4 from 53:47 to 1:06:15 (t=3975)
+- Created `scripts/globals/data_types.gd` — Tools enum (None, AxeWood, TillGround, WaterCrops, PlantCorn, PlantTomato)
+- Moved/renamed `scripts/input_events.gd` → `scripts/game_input_events.gd`, added `use_tool()` method
+- Updated `player.gd` — added `@export var current_tool: DataTypes.Tools`
+- Created `scenes/characters/player/chopping_state.gd` — plays correct chopping animation by direction, auto-returns to Idle
+  - Fixed `if`/`elif` bug where non-down directions all played chopping_front
+- Created `scenes/characters/player/tilling_state.gd` — same pattern as chopping
+- Created `scenes/characters/player/watering_state.gd` — same pattern as chopping
+- Updated `idle_state.gd` — added tool transitions: Chopping (AxeWood), Tilling (TillGround), Watering (WaterCrops)
+- Updated `player.tscn` — added Chopping, Tilling, Watering state nodes to StateMachine; set `current_tool = 2` (AxeWood)
+- Changed all tool animation loops from 1 → 0 (play once, don't loop)
+- Updated `test_scene_player.tscn` — instance changes
+- Next: Start Episode 5 — Creating houses (1:06:18)

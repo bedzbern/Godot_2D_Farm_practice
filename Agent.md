@@ -41,19 +41,23 @@ Godot 2D Farm Game (practice project)
 | 4 | 2026-07-09 | Started Ep 2 @ 21:08, moved to new PC, re-fetched YT transcript, set up player with 20 animations & collision, added to test scene — up to 29:52 | Continue Ep 2 — State machine & keyboard inputs |
 | 5 | 2026-07-09 | Fixed idle_state.gd input/animation bugs, created scripts_notes.md & godot_errors.md, idle state working with debugger — up to 40:55 | Continue — refactor input into game_input_events.gd, create walk state |
 | 6 | 2026-07-10 | Finished Ep 2 (up to 53:05 / t=3185). Created GameInputEvents, WalkState, Player class. Idle↔Walk working. | Start Ep 3 — Tool states (chop, till, water) |
+| 7 | 2026-07-10 | Finished Ep 3 & 4 (up to 1:06:15 / t=3975). Created all 3 tool states (chopping, tilling, watering), DataTypes enum, tool transitions from idle. Fixed if/elif bug in chopping. | Start Ep 5 — Creating houses |
 
 ## Current State
-- **Completed Episode 2** (up to t=3185 / 53:05). Full player state machine working: Idle ↔ Walk with all 4-direction animations.
-- Files created/updated this session:
-  - `scripts/input_events.gd` — static helper `GameInputEvents` (`movement_input()`, `is_movement_input()`)
-  - `scenes/characters/player/walk_state.gd` — walk movement at speed=50, idle transition on release
-  - `scenes/characters/player/player.gd` — `class_name Player`, `extends CharacterBody2D`, `player_direction` var
-  - `idle_state.gd` — refactored to use `player.player_direction` + `GameInputEvents`, emits "Walk" transition
-  - `player.tscn` — Player script, Walk state node, all node paths set
-- Next up: **Start Episode 3 — Tool states (chop, till, water) at 53:47**
-- Project structure: 6 GDScripts, 4 scenes
-- `scripts_notes.md` needs entries for input_events.gd, walk_state.gd, player.gd, updated idle_state.gd
-- YT transcript: NOT available on this PC (was on Administrator PC). Consider re-downloading. Transcript ref path in Agent.md is stale.
+- **Completed Episodes 3 & 4** (up to t=3975 / 1:06:15). All 3 tool states built: Chopping, Tilling, Watering.
+- Full tool state machine working: Idle → Chopping/Tilling/Watering → auto-return to Idle
+- New/updated files this session:
+  - `scripts/globals/data_types.gd` — `DataTypes.Tools` enum (`None`, `AxeWood`, `TillGround`, `WaterCrops`, `PlantCorn`, `PlantTomato`)
+  - `scripts/game_input_events.gd` — renamed from `input_events.gd`, added `use_tool()` (reads "hit" action)
+  - `scenes/characters/player/player.gd` — added `@export var current_tool: DataTypes.Tools`
+  - `scenes/characters/player/chopping_state.gd` — direction-based chop animation, auto-idle transition (fixed if/elif)
+  - `scenes/characters/player/tilling_state.gd` — direction-based till animation, auto-idle
+  - `scenes/characters/player/watering_state.gd` — direction-based water animation, auto-idle
+  - `idle_state.gd` — tool condition checks → emits Chopping/Tilling/Watering transitions
+  - `player.tscn` — 3 new tool state nodes, `current_tool = 2` (AxeWood), tool animations loop=0
+  - `scripts/input_events.gd` — deleted (replaced by `game_input_events.gd`)
+- Next up: **Episode 5 — Creating houses using tilesets and tilemap layers (1:06:18)**
+- Project structure: 10 GDScripts, 4 scenes, 1 autoload/resource
 - All keyword conventions active: "UPDATE MY MD'S", "push git", "explain the code"
 
 ## Reference Files

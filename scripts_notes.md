@@ -310,3 +310,142 @@ func _on_exit() -> void:
 5. **`_on_exit()` stops animation** — prevents the last idle frame from persisting during walk
 
 **C# analogy:** Same pattern as before, but now the state reads from a shared direction variable (like a public property) instead of re-implementing input logic — cleaner separation of concerns.
+
+---
+
+## DataTypes (`scripts/globals/data_types.gd`)
+
+```gdscript
+class_name DataTypes
+enum Tools {
+	None,
+	AxeWood,
+	TillGround,
+	WaterCrops,
+	PlantCorn,
+	PlantTomato
+}
+```
+
+**What it does:** A global enum for tool types. The player's `current_tool` property uses this type, so the Inspector shows a dropdown. IdleState checks `player.current_tool == DataTypes.Tools.AxeWood` (etc.) to decide which state to transition to.
+
+**C# analogy:** A standalone `public enum Tools { ... }` in its own file.
+
+---
+
+## GameInputEvents — updated (`scripts/game_input_events.gd`)
+
+New method added:
+
+```gdscript
+static func use_tool() -> bool:
+	var use_tool_value : bool = Input.is_action_just_pressed("hit")
+	return use_tool_value
+```
+
+**What it does:** Checks for a single-press of the "hit" action (spacebar/F key). Returns `true` only on the frame the key is pressed (not held). Used by IdleState to trigger tool states.
+
+**Key difference from `movement_input()`:** Uses `is_action_just_pressed` (one-shot) vs `is_action_pressed` (continuous hold).
+
+**C# analogy:** `Input.GetKeyDown(KeyCode.Space)` vs `Input.GetKey(KeyCode.Space)`.
+
+---
+
+## Player — updated (`scenes/characters/player/player.gd`)
+
+```gdscript
+class_name Player
+extends CharacterBody2D
+
+@export var current_tool: DataTypes.Tools = DataTypes.Tools.None
+
+var player_direction : Vector2
+```
+
+**What changed:** Added `@export var current_tool: DataTypes.Tools` — shows as a dropdown in the Inspector. Set to `AxeWood` (= 2) in `player.tscn` for testing.
+
+**C# analogy:** `public Tools CurrentTool { get; set; }` with `[Export]` attribute.
+
+---
+
+## IdleState — updated with tool transitions (`scenes/characters/player/idle_state.gd`)
+
+```gdscript
+func _on_next_transitions() -> void:
+	GameInputEvents.movement_input()
+	
+	if GameInputEvents.is_movement_input():
+		transition.emit("Walk")
+		
+	if player.current_tool == DataTypes.Tools.AxeWood && GameInputEvents.use_tool():
+		transition.emit("Chopping")
+	
+	if player.current_tool == DataTypes.Tools.TillGround && GameInputEvents.use_tool():
+		transition.emit("Tilling")
+
+	if player.current_tool == DataTypes.Tools.WaterCrops && GameInputEvents.use_tool():
+		transition.emit("Watering")
+```
+
+**What changed:** Added tool transitions. Each checks `current_tool` against a specific `DataTypes.Tools` value AND requires the "hit" button to be pressed. The tool action only fires from Idle (not while walking) — intentional design.
+
+**C# analogy:**
+```csharp
+if (CurrentTool == Tools.AxeWood && Input.GetKeyDown(KeyCode.Space))
+    Fsm.TransitionTo("Chopping");
+```
+
+---
+
+## Tool State Pattern: Chopping/Tilling/Watering
+
+All three tool states are structurally identical. Here's ChoppingState as the representative:
+
+```gdscript
+extends NodeState
+
+@export var player : Player
+@export var animated_sprite_2d : AnimatedSprite2D
+
+func _on_process(_delta : float) -> void:
+	pass
+
+func _on_physics_process(_delta : float) -> void:
+	pass
+
+func _on_next_transitions() -> void:
+	if !animated_sprite_2d.is_playing():
+		transition.emit("Idle")
+
+func _on_enter() -> void:
+	if player.player_direction == Vector2.UP:
+		animated_sprite_2d.play("chopping_back")
+	elif player.player_direction == Vector2.RIGHT:
+		animated_sprite_2d.play("chopping_right")
+	elif player.player_direction == Vector2.DOWN:
+		animated_sprite_2d.play("chopping_front")
+	elif player.player_direction == Vector2.LEFT:
+		animated_sprite_2d.play("chopping_left")
+	else:
+		animated_sprite_2d.play("chopping_front")
+		
+func _on_exit() -> void:
+	animated_sprite_2d.stop()
+```
+
+**What it does:** Enters → plays the correct direction animation once (loop=0) → auto-transitions back to Idle when the animation finishes.
+
+**Key pattern:**
+- `_on_physics_process` is empty — tool actions don't move the player
+- `_on_next_transitions` checks `is_playing()` — when the animation finishes, return to Idle
+- `_on_enter` uses `if/elif/else` for direction-based animation (fixed from original `if/if/if/else` bug)
+- `_on_exit` stops the animation
+
+**The three files are:**
+| File | State name | Animation prefix |
+|------|-----------|-----------------|
+| `chopping_state.gd` | Chopping | `chopping_*` |
+| `tilling_state.gd` | Tilling | `tilling_*` |
+| `watering_state.gd` | Watering | `watering_*` |
+
+**C# analogy:** A one-shot "ability" state — enters, plays animation, exits when done. Like a `PlayerState` that auto-completes.
