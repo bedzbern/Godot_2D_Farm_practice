@@ -43,19 +43,21 @@ Godot 2D Farm Game (practice project)
 | 6 | 2026-07-10 | Finished Ep 2 (up to 53:05 / t=3185). Created GameInputEvents, WalkState, Player class. Idle↔Walk working. | Start Ep 3 — Tool states (chop, till, water) |
 | 7 | 2026-07-10 | Finished Ep 3 & 4 (up to 1:06:15 / t=3975). Created all 3 tool states (chopping, tilling, watering), DataTypes enum, tool transitions from idle. Fixed if/elif bug in chopping. | Start Ep 5 — Creating houses |
 | 8 | 2026-07-10 | Finished part of Ep 5 (up to 1:18:06 / t=4686). Created house tileset, large_house.tscn scene, SceneCollectionSource in game_tile_set, test scene with houses layer. Adjusted player collision. | Continue Ep 5 or start Ep 6 (choppable trees) |
+| 9 | 2026-07-10 | Finished Ep 5 (up to 1:28:14 / t=5294). Created InteractableComponent, Door scene with open/close, collision layers setup. Debug prints commented out. | Start Ep 6 — Creating choppable trees |
 
 ## Current State
-- **In progress — Episode 5** (up to t=4686 / 1:18:06). House system built.
+- **Completed Episode 5** (up to t=5294 / 1:28:14). Houses + interactable doors built.
 - New files this session:
-  - `tileset/house_tile_set.tres` — TileSet with wooden house walls + furniture textures + physics collision
-  - `scenes/Houses/large_house.tscn` — house scene (Node2D > HouseTileMap > Floor/Walls/Furniture layers)
-  - `scenes/test/test_scene_house_tilemap.tscn` — test scene with game tilemap + Houses TileMapLayer + player
+  - `scenes/components/interactable_component.gd` + `.tscn` — reusable `InteractableComponent` (Area2D) with `interactable_activated`/`interactable_deactivated` signals
+  - `scenes/Houses/door.gd` + `door.tscn` — Door (StaticBody2D) with open/close animations, connects to InteractableComponent
 - Modified files:
-  - `tileset/game_tile_set.tres` — added `large_house.tscn` as SceneCollectionSource (TileSetScenesCollectionSource)
-  - `player.tscn` — collision radius 9.0→4.0, collision position (0,-8)→(0,-4)
-  - `project.godot` — folder colors, physics layer 1 named "Ground"
-- Next up: **Continue Ep 5 or Ep 6 — Creating choppable trees (1:31:12)**
-- Project structure: 10 GDScripts, 6 scenes, 2 TileSets, 1 autoload/resource
+  - `tileset/house_tile_set.tres` — added `door.tscn` as SceneCollectionSource
+  - `player.tscn` — added `collision_layer = 2` (Player layer)
+  - `project.godot` — added `Player` (layer 2) and `Interactable` (layer 3) physics layer names
+  - `node_state_machine.gd` — debug `print` statements commented out
+  - `large_house.tscn` — minor tile_map_data adjustments
+- Next up: **Episode 6 — Creating choppable trees (1:31:12)**
+- Project structure: 12 GDScripts, 8 scenes, 2 TileSets
 - Test scenes: `test_scene_tilemap`, `test_scene_player`, `test_scene_house_tilemap`
 - All keyword conventions active: "UPDATE MY MD'S", "push git", "explain the code"
 

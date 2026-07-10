@@ -70,8 +70,13 @@ Link: https://www.youtube.com/watch?v=it0lsREGdmc
 | Adding house as SceneCollectionSource in game_tile_set | ~1:14:00 |
 | Creating test_scene_house_tilemap with Houses layer | ~1:15:00 |
 | Adjusting player collision radius (9→4) & position | ~1:17:00 |
+| Creating InteractableComponent (Area2D, signals) | ~1:19:00 |
+| Creating Door scene with open/close animations | ~1:22:00 |
+| Adding door SceneCollectionSource to house_tile_set | ~1:25:00 |
+| Setting up collision layers (Player=2, Interactable=3) | ~1:26:00 |
+| Commenting out debug prints in state machine | ~1:27:00 |
 
-*🔄 In progress — up to 1:18:06*
+*✅ Completed*
 
 ## All 25 Episode Chapters (Full Video)
 | # | Title | Timestamp |

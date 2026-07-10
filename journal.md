@@ -70,3 +70,15 @@ Short dated entries of what we did.
 - Created `scenes/test/test_scene_house_tilemap.tscn` — test scene with game tilemap + Houses layer (instanced house) + player (current_tool = WaterCrops)
 - Updated `player.tscn` — collision radius 9.0→4.0, collision position (0,-8)→(0,-4)
 - Next: Continue Ep 5 or start Ep 6 (choppable trees @ 1:31:12)
+
+## 2026-07-10 (Session 9)
+- Watched Episode 5 from 1:18:06 to 1:28:14 (t=5294) — Interactable components & doors
+- Created `scenes/components/interactable_component.gd` — reusable `InteractableComponent` (Area2D) with `interactable_activated`/`deactivated` signals
+- Created `scenes/components/interactable_component.tscn` — Area2D with collision_layer=4, collision_mask=2
+- Created `scenes/Houses/door.gd` — Door (StaticBody2D) with open/close animations, connects to InteractableComponent signals
+- Created `scenes/Houses/door.tscn` — Door scene with AnimatedSprite2D (4-frame open/close at 5 FPS), RectCollisionShapes
+- Updated `house_tile_set.tres` — added `door.tscn` as SceneCollectionSource
+- Updated `player.tscn` — added `collision_layer = 2` (Player physics layer)
+- Updated `project.godot` — added physics layers: Player (2), Interactable (3)
+- Commented out debug prints in `node_state_machine.gd`
+- Next: Episode 6 — Creating choppable trees (1:31:12)
