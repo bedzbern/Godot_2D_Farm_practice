@@ -78,6 +78,26 @@ Link: https://www.youtube.com/watch?v=it0lsREGdmc
 
 *✅ Completed*
 
+## Ep 6 — Creating Choppable Trees (1:31:12 – 1:56:10)
+
+| Topic | Timestamp |
+|-------|-----------|
+| Intro to choppable trees | 1:31:12 |
+| Updating physics/collision layers | ~1:32:00 |
+| Creating HitComponent (Area2D) — detects axe hits | ~1:33:00 |
+| Adding HitComponent to Player scene | ~1:35:00 |
+| Updating ChoppingState to work with HitComponent | ~1:36:00 |
+| Creating CollectableComponent (Area2D) — log drops | ~1:38:00 |
+| Creating Log scene (Sprite2D) with collectable | ~1:40:00 |
+| Creating HurtComponent (Area2D) — tree receives damage | ~1:42:00 |
+| Creating DamageComponent (Node2D) — tree health system | ~1:44:00 |
+| Creating SmallTree scene (Sprite2D) with components | ~1:46:00 |
+| HitComponent defines tool type, HurtComponent defines what affects object | ~1:48:00 |
+| Connecting all components: Hit → Hurt → Damage → drop Log | ~1:50:00 |
+| Testing choppable trees with axe tool | ~1:54:00 |
+
+*🔄 In Progress — watching from t=5499*
+
 ## All 25 Episode Chapters (Full Video)
 | # | Title | Timestamp |
 |---|-------|-----------|

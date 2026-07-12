@@ -44,20 +44,14 @@ Godot 2D Farm Game (practice project)
 | 7 | 2026-07-10 | Finished Ep 3 & 4 (up to 1:06:15 / t=3975). Created all 3 tool states (chopping, tilling, watering), DataTypes enum, tool transitions from idle. Fixed if/elif bug in chopping. | Start Ep 5 — Creating houses |
 | 8 | 2026-07-10 | Finished part of Ep 5 (up to 1:18:06 / t=4686). Created house tileset, large_house.tscn scene, SceneCollectionSource in game_tile_set, test scene with houses layer. Adjusted player collision. | Continue Ep 5 or start Ep 6 (choppable trees) |
 | 9 | 2026-07-10 | Finished Ep 5 (up to 1:28:14 / t=5294). Created InteractableComponent, Door scene with open/close, collision layers setup. Debug prints commented out. | Start Ep 6 — Creating choppable trees |
+| 10 | 2026-07-12 | Started Ep 6 — Choppable Trees (t=5499 / 1:31:39). Watching intro. | Continue Ep 6 — HitComponent, HurtComponent, DamageComponent, SmallTree, Log |
 
 ## Current State
-- **Completed Episode 5** (up to t=5294 / 1:28:14). Houses + interactable doors built.
-- New files this session:
-  - `scenes/components/interactable_component.gd` + `.tscn` — reusable `InteractableComponent` (Area2D) with `interactable_activated`/`interactable_deactivated` signals
-  - `scenes/Houses/door.gd` + `door.tscn` — Door (StaticBody2D) with open/close animations, connects to InteractableComponent
-- Modified files:
-  - `tileset/house_tile_set.tres` — added `door.tscn` as SceneCollectionSource
-  - `player.tscn` — added `collision_layer = 2` (Player layer)
-  - `project.godot` — added `Player` (layer 2) and `Interactable` (layer 3) physics layer names
-  - `node_state_machine.gd` — debug `print` statements commented out
-  - `large_house.tscn` — minor tile_map_data adjustments
-- Next up: **Episode 6 — Creating choppable trees (1:31:12)**
-- Project structure: 12 GDScripts, 8 scenes, 2 TileSets
+- **Starting Episode 6** (t=5499 / 1:31:39) — Creating choppable trees with damage and log collectables.
+- Player-side chopping infrastructure already exists: `chopping_state.gd`, `AxeWood` tool enum, `GameInputEvents.use_tool()`
+- **No tree-related scripts/scenes/sprites exist yet** — need to create from scratch
+- Project structure: 12 GDScripts, 10 scenes, 2 TileSets
+- Physics layers: Ground (1), Player (2), Interactable (3) — may need updating for tree components
 - Test scenes: `test_scene_tilemap`, `test_scene_player`, `test_scene_house_tilemap`
 - All keyword conventions active: "UPDATE MY MD'S", "push git", "explain the code"
 

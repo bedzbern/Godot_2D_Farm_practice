@@ -82,3 +82,9 @@ Short dated entries of what we did.
 - Updated `project.godot` — added physics layers: Player (2), Interactable (3)
 - Commented out debug prints in `node_state_machine.gd`
 - Next: Episode 6 — Creating choppable trees (1:31:12)
+
+## 2026-07-12 (Session 10)
+- Started Episode 6 — Choppable Trees (t=5499 / 1:31:39)
+- Watching intro — will create: HitComponent, HurtComponent, DamageComponent, SmallTree, Log, CollectableComponent
+- Player chopping infrastructure already exists (chopping_state.gd, AxeWood tool)
+- Need to create tree object with health/damage system and log drops
