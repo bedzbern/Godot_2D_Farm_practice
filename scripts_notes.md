@@ -449,3 +449,181 @@ func _on_exit() -> void:
 | `watering_state.gd` | Watering | `watering_*` |
 
 **C# analogy:** A one-shot "ability" state — enters, plays animation, exits when done. Like a `PlayerState` that auto-completes.
+
+---
+
+## HitComponent (`scenes/components/hit_component.gd`)
+
+```gdscript
+class_name HitComponent
+extends Area2D
+
+@export var current_tool : DataTypes.Tools = DataTypes.Tools.None
+@export var hit_damage : int = 1
+```
+
+**What it does:**
+Pure data component that sits on the **player**. Tells the tree *what tool* hit it and *how much damage* it deals. No signals, no logic — just two exported properties. The collision shape is disabled by default and only enabled during the chopping animation (via ChoppingState).
+
+**Key points:**
+
+| Line | What it does | C# Equivalent |
+|------|--------------|---------------|
+| `class_name HitComponent` | Globally accessible type | `public class HitComponent : Area2D` |
+| `@export var current_tool` | Which tool this hit uses (Inspector dropdown) | `[Export] public Tools CurrentTool;` |
+| `@export var hit_damage` | Damage amount per hit | `[Export] public int HitDamage = 1;` |
+
+**Physics layers:** `collision_layer = 8` (Tool), `collision_mask = 16` (Object) — "I exist on the Tool layer, I detect Objects"
+
+**C# analogy:** A plain `MonoBehaviour` with public fields — no logic, just configuration. The "dumb data" half of a component pattern.
+
+---
+
+## HurtComponent (`scenes/components/hurt_component.gd`)
+
+```gdscript
+class_name HurtComponent
+extends Area2D
+
+@export var tool : DataTypes.Tools = DataTypes.Tools.None
+
+signal hurt
+
+func _on_area_entered(area: Area2D) -> void:
+    var hit_component = area as HitComponent
+    if tool == hit_component.current_tool:
+        hurt.emit(hit_component.hit_damage)
+```
+
+**What it does:**
+Sits on the **tree** (or any damageable object). When its area overlaps with a HitComponent, it checks: "does my tool type match what hit me?" If yes → emit `hurt` with the damage amount. This is how one component can handle different tool interactions (axe on trees, pickaxe on rocks, etc.).
+
+**Key points:**
+
+| Line | What it does | C# Equivalent |
+|------|--------------|---------------|
+| `@export var tool` | What tool type this object responds to | `[Export] public Tools Tool;` |
+| `signal hurt` | Emitted when hit by matching tool | `[Signal] public delegate void HurtEventHandler(int hitDamage);` |
+| `var hit_component = area as HitComponent` | Cast the overlapping area to HitComponent | `var hitComp = area as HitComponent;` |
+| `if tool == hit_component.current_tool` | Only react if the tool matches | Guard clause |
+| `hurt.emit(hit_component.hit_damage)` | Pass damage amount to listeners | `Hurt?.Invoke(hitDamage);` |
+
+**Physics layers:** `collision_layer = 16` (Object), `collision_mask = 8` (Tool) — mirror opposite of HitComponent
+
+**C# analogy:** A trigger collider that checks tag/type before firing an event. Like `OnTriggerEnter2D` with a type check.
+
+---
+
+## DamageComponent (`scenes/components/damage_component.gd`)
+
+```gdscript
+class_name DamageComponent
+extends Node2D
+
+@export var max_damage = 1
+@export var current_damage = 0
+
+signal max_damage_reached
+
+func apply_damage(damage: int) -> void:
+    current_damage = clamp(current_damage + damage, 0, max_damage)
+    if current_damage == max_damage:
+        max_damage_reached.emit()
+```
+
+**What it does:**
+Sits on the **tree** (or any destructible). Tracks health with `clamp()` so damage never exceeds max. When health hits max → emit `max_damage_reached`. Generic enough for any object that takes damage (trees, rocks, chests, etc.).
+
+**Key points:**
+
+| Line | What it does | C# Equivalent |
+|------|--------------|---------------|
+| `@export var max_damage = 1` | Health pool (Inspector-editable) | `[Export] public int MaxDamage = 1;` |
+| `@export var current_damage = 0` | Current health | `public int CurrentDamage;` |
+| `signal max_damage_reached` | Emitted when health is depleted | `[Signal] public delegate void MaxDamageReachedEventHandler();` |
+| `clamp(current_damage + damage, 0, max_damage)` | Add damage but never go below 0 or above max | `Mathf.Clamp(CurrentDamage + damage, 0, MaxDamage)` |
+| `if current_damage == max_damage` | Check if fully destroyed | Guard clause |
+
+**C# analogy:** A health component — `TakeDamage(int amount)` with clamping. Same as `Health.cs` in most Unity tutorials.
+
+---
+
+## SmallTree (`scenes/objects/trees/small_tree.gd`)
+
+```gdscript
+extends Sprite2D
+@onready var damage_component: DamageComponent = $DamageComponent
+@onready var hurt_component: HurtComponent = $HurtComponent
+
+func _ready() -> void:
+    hurt_component.hurt.connect(on_hurt)
+    damage_component.max_damage_reached.connect(on_max_damage_reached)
+
+func on_hurt(hit_damage : int) -> void:
+    damage_component.apply_damage(hit_damage)
+
+func on_max_damage_reached() -> void:
+    queue_free()
+```
+
+**What it does:**
+The **glue script** that connects components together via signals. When hurt → pass damage to DamageComponent. When max damage reached → destroy the tree.
+
+**Key points:**
+
+| Line | What it does | C# Equivalent |
+|------|--------------|---------------|
+| `@onready var damage_component` | Cache reference to child node | `private DamageComponent _damageComp;` → assign in `Start()` |
+| `hurt_component.hurt.connect(on_hurt)` | Subscribe to signal | `hurtComponent.Hurt += OnHurt;` |
+| `damage_component.apply_damage(hit_damage)` | Forward damage to health tracker | `damageComp.ApplyDamage(hitDamage);` |
+| `queue_free()` | Remove node from scene tree | `Destroy(gameObject);` |
+
+**Flow:** `HurtComponent.hurt` → `on_hurt()` → `DamageComponent.apply_damage()` → if max reached → `max_damage_reached` → `on_max_damage_reached()` → `queue_free()`
+
+**C# analogy:** A `MonoBehaviour` that wires up events in `Start()` — like connecting UI buttons to handlers. The "controller" in an MVC-ish pattern.
+
+---
+
+## ChoppingState — updated (`scenes/characters/player/chopping_state.gd`)
+
+```gdscript
+extends NodeState
+
+@export var player : Player
+@export var animated_sprite_2d : AnimatedSprite2D
+@export var hit_component_collision_shape : CollisionShape2D
+
+func _ready() -> void:
+    hit_component_collision_shape.disabled = true
+    hit_component_collision_shape.position = Vector2(0,0)
+
+func _on_enter() -> void:
+    if player.player_direction == Vector2.UP:
+        animated_sprite_2d.play("chopping_back")
+        hit_component_collision_shape.position = Vector2(0,-18)
+    elif player.player_direction == Vector2.RIGHT:
+        animated_sprite_2d.play("chopping_right")
+        hit_component_collision_shape.position = Vector2(9,0)
+    elif player.player_direction == Vector2.DOWN:
+        animated_sprite_2d.play("chopping_front")
+        hit_component_collision_shape.position = Vector2(0,3)
+    elif player.player_direction == Vector2.LEFT:
+        animated_sprite_2d.play("chopping_left")
+        hit_component_collision_shape.position = Vector2(-9,0)
+    else:
+        animated_sprite_2d.play("chopping_front")
+    hit_component_collision_shape.disabled = false
+
+func _on_exit() -> void:
+    animated_sprite_2d.stop()
+    hit_component_collision_shape.disabled = true
+```
+
+**What changed from original:**
+1. **`@export var hit_component_collision_shape`** — reference to the HitComponent's CollisionShape2D on the player
+2. **`_ready()` disables the shape** — hit detection OFF by default, only active during chop
+3. **`_on_enter()` positions the shape per direction** — different Vector2 offsets so the hit box appears in front of the player (up=-18y, right=+9x, down=+3y, left=-9x)
+4. **`_on_enter()` enables the shape** — `disabled = false` activates the Area2D overlap
+5. **`_on_exit()` disables the shape** — `disabled = true` stops hit detection when leaving chop state
+
+**C# analogy:** Like enabling/disabling a trigger collider during an attack animation — common in action games for frame-accurate hitboxes.

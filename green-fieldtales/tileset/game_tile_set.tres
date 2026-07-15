@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://bjc548mqama3p" path="res://scenes/Houses/large_house.tscn" id="5_d7aul"]
 [ext_resource type="PackedScene" uid="uid://dcrwhdnx66dkq" path="res://scenes/Houses/small_house.tscn" id="6_txf0g"]
 [ext_resource type="PackedScene" uid="uid://b208k8cdl7xjm" path="res://scenes/Houses/medium_house.tscn" id="7_47fbk"]
+[ext_resource type="PackedScene" uid="uid://g2bjs6hp1857" path="res://scenes/objects/trees/small_tree.tscn" id="8_47fbk"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_o3obh"]
 texture = ExtResource("1_0ghq3")
@@ -480,6 +481,7 @@ texture = ExtResource("4_d7aul")
 scenes/1/scene = ExtResource("5_d7aul")
 scenes/2/scene = ExtResource("6_txf0g")
 scenes/3/scene = ExtResource("7_47fbk")
+scenes/4/scene = ExtResource("8_47fbk")
 
 [resource]
 terrain_set_0/mode = 0

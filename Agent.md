@@ -45,18 +45,20 @@ Godot 2D Farm Game (practice project)
 | 8 | 2026-07-10 | Finished part of Ep 5 (up to 1:18:06 / t=4686). Created house tileset, large_house.tscn scene, SceneCollectionSource in game_tile_set, test scene with houses layer. Adjusted player collision. | Continue Ep 5 or start Ep 6 (choppable trees) |
 | 9 | 2026-07-10 | Finished Ep 5 (up to 1:28:14 / t=5294). Created InteractableComponent, Door scene with open/close, collision layers setup. Debug prints commented out. | Start Ep 6 — Creating choppable trees |
 | 10 | 2026-07-12 | Started Ep 6 — Choppable Trees (t=5499 / 1:31:39). Watching intro. | Continue Ep 6 — HitComponent, HurtComponent, DamageComponent, SmallTree, Log |
+| 11 | 2026-07-15 | Finished Ep 6 up to t=6616 (1:50:16). Created HitComponent, HurtComponent, DamageComponent, SmallTree, test_scene_object_trees. Updated ChoppingState with hit detection. Tree chopping working (3 hits to destroy). | Continue Ep 6 — Log scene, CollectableComponent (from ~1:50:16) |
 
 ## Current State
-- **Starting Episode 6** (t=5499 / 1:31:39) — Creating choppable trees with damage and log collectables.
-- Player-side chopping infrastructure already exists: `chopping_state.gd`, `AxeWood` tool enum, `GameInputEvents.use_tool()`
-- **No tree-related scripts/scenes/sprites exist yet** — need to create from scratch
-- Project structure: 12 GDScripts, 10 scenes, 2 TileSets
-- Physics layers: Ground (1), Player (2), Interactable (3) — may need updating for tree components
-- Test scenes: `test_scene_tilemap`, `test_scene_player`, `test_scene_house_tilemap`
+- **Watching Episode 6** at t=6616 (1:50:16) — about to create Log scene and CollectableComponent
+- Tree chopping system fully working: Hit → Hurt → Damage → destroy (3 hits)
+- **Still need to create:** Log scene (Sprite2D with atlas), CollectableComponent (Area2D, body_entered, frees parent)
+- Player-side chopping: `chopping_state.gd` updated with hit_component_collision_shape (disabled by default, enabled per swing direction)
+- Project structure: 16 GDScripts, 15 scenes, 2 TileSets
+- Physics layers: Ground (1), Player (2), Interactable (3), Tool (4), Object (5)
+- Test scenes: `test_scene_tilemap`, `test_scene_player`, `test_scene_house_tilemap`, `test_scene_object_trees`
 - All keyword conventions active: "UPDATE MY MD'S", "push git", "explain the code"
 
 ## Reference Files
-- **YouTube Transcript**: `C:\Users\Administrator\Desktop\opencode_ref\yt_transcript_it0lsREGdmc.json`
+- **YouTube Transcript**: `E:\GOdot_Youtube_farming_transcript\yt_transcript_it0lsREGdmc.json`
   - Full transcript (10,360 entries) with timestamps in ms
   - When user gives a YouTube timestamp (`t=SECONDS`), search by `offset` field to find matching dialogue
 

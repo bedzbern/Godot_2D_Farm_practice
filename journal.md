@@ -88,3 +88,16 @@ Short dated entries of what we did.
 - Watching intro — will create: HitComponent, HurtComponent, DamageComponent, SmallTree, Log, CollectableComponent
 - Player chopping infrastructure already exists (chopping_state.gd, AxeWood tool)
 - Need to create tree object with health/damage system and log drops
+
+## 2026-07-15 (Session 11)
+- Watched Episode 6 from 1:31:39 to 1:50:16 (t=6616)
+- Created `scenes/components/hit_component.gd` + `.tscn` — Area2D, exports `current_tool` and `hit_damage`, collision_layer=8 (Tool), collision_mask=16 (Object)
+- Created `scenes/components/hurt_component.gd` + `.tscn` — Area2D, exports `tool` type, emits `hurt` signal if tool matches, collision_layer=16 (Object), collision_mask=8 (Tool)
+- Created `scenes/components/damage_component.gd` + `.tscn` — Node2D, exports `max_damage`/`current_damage`, `apply_damage()` with clamp, emits `max_damage_reached`
+- Created `scenes/objects/trees/small_tree.gd` + `.tscn` — Sprite2D with atlas texture (basic_grass_biom_things.png), StaticBody2D for collision, HurtComponent + DamageComponent (max_damage=3), script connects hurt→damage→queue_free
+- Updated `scenes/characters/player/chopping_state.gd` — added `hit_component_collision_shape` export, positions shape per direction on enter, disables on exit
+- Updated `scenes/characters/player/player.tscn` — added HitComponent instance with CollisionShape2D (circle, radius=3)
+- Updated `project.godot` — added physics layers: Tool (4), Object (5)
+- Created `scenes/test/test_scene_object_trees.tscn` — test scene with tilemap, trees layer, player (current_tool=AxeWood)
+- Tested: 3 axe hits destroys tree ✅
+- Next: Create Log scene + CollectableComponent (from ~1:50:16)

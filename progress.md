@@ -2,6 +2,7 @@
 
 Course: **How to Build a Complete 2D Farming Game** (Godot 4.3)
 Link: https://www.youtube.com/watch?v=it0lsREGdmc
+Transcript: `E:\GOdot_Youtube_farming_transcript\yt_transcript_it0lsREGdmc.json` (10,360 entries, timestamps in ms)
 
 ## Ep 1 — Project Setup & Tilemap Layers (0:00 – 21:08)
 
@@ -83,20 +84,22 @@ Link: https://www.youtube.com/watch?v=it0lsREGdmc
 | Topic | Timestamp |
 |-------|-----------|
 | Intro to choppable trees | 1:31:12 |
-| Updating physics/collision layers | ~1:32:00 |
-| Creating HitComponent (Area2D) — detects axe hits | ~1:33:00 |
-| Adding HitComponent to Player scene | ~1:35:00 |
-| Updating ChoppingState to work with HitComponent | ~1:36:00 |
-| Creating CollectableComponent (Area2D) — log drops | ~1:38:00 |
-| Creating Log scene (Sprite2D) with collectable | ~1:40:00 |
-| Creating HurtComponent (Area2D) — tree receives damage | ~1:42:00 |
-| Creating DamageComponent (Node2D) — tree health system | ~1:44:00 |
-| Creating SmallTree scene (Sprite2D) with components | ~1:46:00 |
-| HitComponent defines tool type, HurtComponent defines what affects object | ~1:48:00 |
-| Connecting all components: Hit → Hurt → Damage → drop Log | ~1:50:00 |
-| Testing choppable trees with axe tool | ~1:54:00 |
+| Updating physics/collision layers (Tool=4, Object=5) | ~1:32:00 |
+| Creating test_scene_object_trees | ~1:32:30 |
+| Creating SmallTree scene (Sprite2D + StaticBody2D + atlas texture) | ~1:33:00 |
+| Adding SmallTree to test scene, placing trees in tilemap | ~1:34:00 |
+| Creating HurtComponent (Area2D) — receives damage if tool matches | ~1:36:00 |
+| Creating HitComponent (Area2D) — sends damage from player | ~1:37:00 |
+| Adding HitComponent to Player scene, collision shape per direction | ~1:38:00 |
+| Updating ChoppingState — enable/disable hit shape per swing | ~1:40:00 |
+| HitComponent collision layers: Tool (4), HurtComponent: Object (5) | ~1:42:00 |
+| Testing hit detection between player and tree | ~1:44:00 |
+| Creating DamageComponent (Node2D) — health tracking, max_damage signal | ~1:46:00 |
+| Adding DamageComponent to SmallTree (max_damage=3) | ~1:47:00 |
+| SmallTree script — connecting hurt→damage→destroy signals | ~1:48:00 |
+| Testing: 3 hits destroys tree ✅ | ~1:50:00 |
 
-*🔄 In Progress — watching from t=5499*
+*🔄 In Progress — watching from t=6616 (1:50:16). Next: Log scene + CollectableComponent*
 
 ## All 25 Episode Chapters (Full Video)
 | # | Title | Timestamp |
