@@ -113,3 +113,16 @@ Short dated entries of what we did.
 - Fixed transcript path in Agent.md and progress.md (E: → D:)
 - Pulled latest git, repo was up to date
 - Next: Episode 7 — Tree shake vertex shader (1:56:10)
+
+## 2026-07-18 (Session 13)
+- Watched Episode 7 from 1:56:10 to 2:04:11 (t=7451) — Tree shake vertex shader
+- Created `scenes/objects/trees/tree_shake.gdshader` — canvas_item vertex shader
+  - Uniforms: shake_intensity (0.0 default), shake_speed (20.0)
+  - `if(VERTEX.y < 0.0)` — only shake top half of sprite, base stays fixed
+  - `shake.x = sin(TIME * shake_speed + VERTEX.y) * shake_intensity`
+- Applied ShaderMaterial to both `small_tree.tscn` and `large_tree.tscn`
+  - `resource_local_to_scene = true` — each tree gets its own material instance
+- Updated `small_tree.gd` — `material.set_shader_parameter("shake_intensity", 0.5)` in `on_hurt()`, `await 1s`, reset to 0.0
+- Updated `large_tree.gd` — same shake pattern
+- Fixed transcript path D:→E: in all MDs
+- Next: Episode 8 — Mineable rocks (2:04:06)

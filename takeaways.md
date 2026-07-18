@@ -43,3 +43,13 @@ Add entries as we learn.
 - Area2D + `body_entered` signal → check `if body is Player` → `get_parent().queue_free()`
 - Free parent (the item node), not self (the component) — otherwise the sprite orphan persists
 - collision_layer = Collectable layer, collision_mask = Player layer
+
+## Vertex Shader — Tree Shake
+- `shader_type canvas_item` — runs on the GPU for 2D sprites
+- `uniform float` — exposed in Inspector, tweakable per material instance
+- `void vertex()` — runs per vertex, modify `VERTEX.xy` to displace
+- `if(VERTEX.y < 0.0)` — only displace top half of sprite (negative y = above center in Godot 2D)
+- `sin(TIME * speed + VERTEX.y)` — wave effect, each vertex oscillates at slightly different phase based on y position
+- `resource_local_to_scene = true` — each tree instance gets its own material copy (so shaking one tree doesn't shake all)
+- `material.set_shader_parameter("shake_intensity", 0.5)` — animate from script, set to 0.0 when done
+- C# Unity equivalent: `MaterialPropertyBlock` + custom shader, or Shader Graph vertex displacement

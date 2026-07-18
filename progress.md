@@ -2,7 +2,7 @@
 
 Course: **How to Build a Complete 2D Farming Game** (Godot 4.3)
 Link: https://www.youtube.com/watch?v=it0lsREGdmc
-Transcript: `D:\GOdot_Youtube_farming_transcript\yt_transcript_it0lsREGdmc.json` (10,360 entries, timestamps in ms)
+Transcript: `E:\GOdot_Youtube_farming_transcript\yt_transcript_it0lsREGdmc.json` (10,360 entries, timestamps in ms)
 
 ## Ep 1 — Project Setup & Tilemap Layers (0:00 – 21:08)
 
@@ -103,6 +103,22 @@ Transcript: `D:\GOdot_Youtube_farming_transcript\yt_transcript_it0lsREGdmc.json`
 | CollectableComponent (Area2D, body_entered → queue_free) | ~1:54:00 |
 | Creating LargeTree (same pattern, max_damage=5, 32x32 atlas) | ~1:55:00 |
 | Testing: small + large trees, log drops, collectible pickup ✅ | ~1:55:30 |
+
+*✅ Completed*
+
+## Ep 7 — Tree Shake Vertex Shader (1:56:10 – 2:04:06)
+
+| Topic | Timestamp |
+|-------|-----------|
+| Intro to vertex shaders for tree shake | 1:56:10 |
+| Creating tree_shake.gdshader (vertex displacement) | ~1:57:00 |
+| Shader uniform: shake_intensity, shake_speed | ~1:58:00 |
+| Vertex.y < 0 check — only shake top half of sprite | ~1:59:00 |
+| Applying ShaderMaterial to SmallTree | ~2:00:00 |
+| resource_local_to_scene = true (per-instance material) | ~2:01:00 |
+| Updating tree scripts — set_shader_parameter on hurt | ~2:02:00 |
+| Reset shake_intensity after 1s await | ~2:03:00 |
+| Testing shake effect on both tree variants | ~2:04:00 |
 
 *✅ Completed*
 

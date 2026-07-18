@@ -47,20 +47,23 @@ Godot 2D Farm Game (practice project)
 | 10 | 2026-07-12 | Started Ep 6 — Choppable Trees (t=5499 / 1:31:39). Watching intro. | Continue Ep 6 — HitComponent, HurtComponent, DamageComponent, SmallTree, Log |
 | 11 | 2026-07-15 | Finished Ep 6 up to t=6616 (1:50:16). Created HitComponent, HurtComponent, DamageComponent, SmallTree, test_scene_object_trees. Updated ChoppingState with hit detection. Tree chopping working (3 hits to destroy). | Continue Ep 6 — Log scene, CollectableComponent (from ~1:50:16) |
 | 12 | 2026-07-18 | Finished Ep 6 (up to t=6951 / 1:55:51). Created Log scene (Sprite2D + CollectableComponent), CollectableComponent (Area2D), updated SmallTree to spawn log on destroy, created LargeTree (max_damage=5), created small_house.tscn & medium_house.tscn. Fixed transcript path (E:→D:). | Start Ep 7 — Tree shake vertex shader (1:56:10) |
+| 13 | 2026-07-18 | Finished Ep 7 (up to t=7451 / 2:04:11). Created tree_shake.gdshader (vertex shader — shakes top half of sprite, base stays fixed). Applied ShaderMaterial to both SmallTree and LargeTree with resource_local_to_scene=true. Updated both .gd scripts to toggle shake_intensity=0.5 on hurt, reset to 0.0 after 1s await. Fixed transcript path D:→E: in all MDs. | Start Ep 8 — Mineable rocks (2:04:06) |
 
 ## Current State
-- **Finished Episode 6** at t=6951 (1:55:51) — full tree system complete
-- Complete tree destruction flow: Player chops → HitComponent hits → HurtComponent filters tool → DamageComponent tracks health → on destroy → Log spawned via `call_deferred` → CollectableComponent picks up on player contact
+- **Finished Episode 7** at t=7451 (2:04:11) — tree shake vertex shader complete
+- Complete tree system with shake feedback: Player chops → HitComponent hits → HurtComponent filters tool → DamageComponent tracks health → tree shakes (shader) → on destroy → Log spawned via `call_deferred` → CollectableComponent picks up on player contact
+- Tree shake shader: `tree_shake.gdshader` — vertex shader shakes top half of sprite (VERTEX.y < 0), base stays fixed. Applied via ShaderMaterial with resource_local_to_scene=true on both tree scenes
+- Both tree scripts: `material.set_shader_parameter("shake_intensity", 0.5)` on hurt → `await 1s` → reset to 0.0
 - Two tree variants: SmallTree (3 hp, 16x32 atlas) and LargeTree (5 hp, 32x32 atlas, higher y-sort position)
 - Three house variants: large_house, medium_house, small_house — all using same house_tile_set.tres
-- **Next: Episode 7** — Tree shake vertex shader (1:56:10)
-- Project structure: 17 GDScripts, 21 scenes, 2 TileSets
-- Physics layers: Ground (1), Player (2), Interactable (3), Tool (4), Object (5)
+- **Next: Episode 8** — Mineable rocks (2:04:06)
+- Project structure: 18 GDScripts, 18 scenes, 2 TileSets, 1 shader
+- Physics layers: Ground (1), Player (2), Interactable (3), Tool (4), Object (5), Collectible (6)
 - Test scenes: `test_scene_tilemap`, `test_scene_player`, `test_scene_house_tilemap`, `test_scene_object_trees`
 - All keyword conventions active: "UPDATE MY MD'S", "push git", "explain the code"
 
 ## Reference Files
-- **YouTube Transcript**: `D:\GOdot_Youtube_farming_transcript\yt_transcript_it0lsREGdmc.json` (10,360 entries, timestamps in ms)
+- **YouTube Transcript**: `E:\GOdot_Youtube_farming_transcript\yt_transcript_it0lsREGdmc.json` (10,360 entries, timestamps in ms)
   - Full transcript (10,360 entries) with timestamps in ms
   - When user gives a YouTube timestamp (`t=SECONDS`), search by `offset` field to find matching dialogue
 

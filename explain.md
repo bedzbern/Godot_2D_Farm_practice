@@ -42,3 +42,17 @@ Add entries when you ask me to explain something.
 - **How:** CollectableComponent (Area2D) with `body_entered` signal → checks `if body is Player` → `get_parent().queue_free()`
 - **Physics layers:** Collectable on layer 6 (mask=2 for Player), Player on layer 2. The collectable *detects* the player entering its area.
 - **Why `get_parent().queue_free()` not `queue_free()`:** The CollectableComponent is a child of the Log node. Freeing the component leaves an orphaned log sprite. Freeing the parent removes the entire log.
+
+## Vertex Shader — Tree Shake
+- **What:** A GPU shader that displaces vertex positions to create a shaking/swaying effect on sprites
+- **How it works:**
+  1. `shader_type canvas_item` — tells Godot this is a 2D sprite shader
+  2. `uniform float shake_intensity` — controls how far vertices move (0 = no shake, 0.5 = visible wobble)
+  3. `uniform float shake_speed` — controls oscillation speed (20 = fast wobble)
+  4. `void vertex()` — runs on the GPU per vertex, modifies `VERTEX.xy` directly
+  5. `if(VERTEX.y < 0.0)` — only displaces vertices ABOVE the sprite center (negative y = top in Godot 2D)
+  6. `sin(TIME * shake_speed + VERTEX.y)` — wave function where each vertex oscillates at a different phase (based on its y position), creating organic sway
+- **Why only top half:** The base of a tree should stay rooted. The canopy wobbles. If you shook the whole sprite, the tree would float around unnaturally.
+- **resource_local_to_scene = true:** Each tree instance gets its OWN copy of the ShaderMaterial. Without this, changing shake_intensity on one tree would shake ALL trees sharing that material.
+- **From script:** `material.set_shader_parameter("shake_intensity", 0.5)` → shake starts. `await 1s` → set back to 0.0 → shake stops.
+- **C# analogy:** In Unity, you'd use `MaterialPropertyBlock.SetFloat("_ShakeIntensity", 0.5)` on a `SpriteRenderer` with a custom shader, or use Shader Graph's Vertex Displacement node. Same concept — animate a shader uniform from code.

@@ -599,6 +599,9 @@ func _ready() -> void:
 
 func on_hurt(hit_damage : int) -> void:
     damage_component.apply_damage(hit_damage)
+    material.set_shader_parameter("shake_intensity", 0.5)
+    await get_tree().create_timer(1.0).timeout
+    material.set_shader_parameter("shake_intensity", 0.0)
 
 func on_max_damage_reached() -> void:
     call_deferred("add_log_scene")
@@ -612,14 +615,20 @@ func add_log_scene() -> void:
 ```
 
 **What changed from original:**
-1. **`var log_scene = preload(...)`** — loads the Log scene at parse time (like `using static import` in C#)
-2. **`call_deferred("add_log_scene")`** — schedules `add_log_scene()` for the end of the frame (like `Invoke(() => ...)` in Unity). **Critical:** Can't add children to the scene tree during a physics callback — `call_deferred` defers the add to avoid the "Can't change state while flushing queries" error
-3. **`add_log_scene()`** — instantiates the log, sets its position to the tree's position, adds it to the **parent** of the tree (not the tree itself — the tree is about to be freed)
-4. **`get_parent().add_child()`** — adds the log to the same node that contained the tree (the trees layer in the tilemap), so the log persists in the world
+1. **`material.set_shader_parameter("shake_intensity", 0.5)`** — activates the vertex shake shader on the tree's material
+2. **`await get_tree().create_timer(1.0).timeout`** — waits 1 second before stopping the shake
+3. **`material.set_shader_parameter("shake_intensity", 0.0)`** — stops the shake after 1 second
 
-**Key pattern:** `queue_free()` removes the tree immediately, but `call_deferred` ensures the log spawn happens *after* the current frame's physics processing is done. Without this, you'd get the "Can't change state while flushing queries" error.
+**Key points:**
+| Line | What it does | C# Equivalent |
+|------|--------------|---------------|
+| `material.set_shader_parameter("shake_intensity", 0.5)` | Sets a shader uniform value on the node's material | `spriteRenderer.materialPropertyBlock.SetFloat("_ShakeIntensity", 0.5f)` |
+| `await get_tree().create_timer(1.0).timeout` | Async wait — pauses this function for 1 second | `await Task.Delay(1000)` or `yield return new WaitForSeconds(1f)` |
+| `material.set_shader_parameter("shake_intensity", 0.0)` | Resets the shake to zero | Same as above with 0.0f |
 
-**C# analogy:** `call_deferred("method_name")` ≈ `Invoke(() => MethodName(), 0f)` in Unity (runs at end of frame). Or `await Task.Yield()` + `MethodName()`.
+**Why `material` not `get_material()`:** Each tree scene has `resource_local_to_scene = true` on its ShaderMaterial, so `material` refers to the per-instance copy. Changes only affect THIS tree, not all trees.
+
+**C# analogy:** `MaterialPropertyBlock` in Unity to set per-instance shader properties without creating new materials.
 
 ---
 
@@ -638,6 +647,9 @@ func _ready() -> void:
 
 func on_hurt(hit_damage : int) -> void:
     damage_component.apply_damage(hit_damage)
+    material.set_shader_parameter("shake_intensity", 0.5)
+    await get_tree().create_timer(1.0).timeout
+    material.set_shader_parameter("shake_intensity", 0.0)
 
 func on_max_damage_reached() -> void:
     call_deferred("add_log_scene")
@@ -651,7 +663,7 @@ func add_log_scene() -> void:
 ```
 
 **What it does:**
-Identical script to SmallTree — same glue pattern. The difference is in the scene (`.tscn`):
+Identical script to SmallTree — same glue pattern + shake shader. The difference is in the scene (`.tscn`):
 
 | Property | SmallTree | LargeTree |
 |----------|-----------|-----------|
@@ -661,9 +673,47 @@ Identical script to SmallTree — same glue pattern. The difference is in the sc
 | max_damage | 3 | 5 |
 | StaticBody collision | Circle, r=4 | Circle, r=5 |
 
-**Reusability in action:** Same components (HurtComponent, DamageComponent), same script pattern, just different exported values. The LargeTree takes 5 hits to destroy instead of 3.
+**Reusability in action:** Same components (HurtComponent, DamageComponent), same script pattern, same shader, just different exported values. The LargeTree takes 5 hits to destroy instead of 3.
 
 **C# analogy:** Same `MonoBehaviour` script, different prefab settings — like having `Tree prefab` with `health=3` and `BigTree prefab` with `health=5` using the same `TreeController.cs`.
+
+---
+
+## Tree Shake Shader (`scenes/objects/trees/tree_shake.gdshader`)
+
+```glsl
+shader_type canvas_item;
+uniform float shake_intensity = 0.0;
+uniform float shake_speed = 20.0;
+
+void vertex() {
+    vec2 shake = vec2(0.0);
+    if(VERTEX.y < 0.0){
+        shake.x = sin(TIME * shake_speed + VERTEX.y) * shake_intensity;
+        VERTEX.xy += shake;
+    }
+}
+```
+
+**What it does:**
+A vertex shader that creates a tree-shake effect when the tree is hit. Only the top half of the sprite wobbles — the base stays rooted in place.
+
+**Line by line:**
+
+| Line | What it does | C# Equivalent |
+|------|--------------|---------------|
+| `shader_type canvas_item` | 2D sprite shader (runs on GPU) | Unity: shader type set in Shader Graph or custom .shader file |
+| `uniform float shake_intensity = 0.0` | How far vertices displace (0=none, 0.5=visible wobble) | `MaterialPropertyBlock.SetFloat("_ShakeIntensity", ...)` |
+| `uniform float shake_speed = 20.0` | Oscillation speed | Same, different uniform |
+| `void vertex()` | Runs per vertex on GPU | Vertex shader stage in HLSL/ShaderLab |
+| `if(VERTEX.y < 0.0)` | Only shake vertices ABOVE center (negative y = top in Godot 2D) | Custom vertex displacement logic |
+| `sin(TIME * shake_speed + VERTEX.y)` | Wave function — each vertex oscillates at different phase based on y | Same math in any shader language |
+| `VERTEX.xy += shake` | Apply displacement to vertex position | `position.xy += shake` in HLSL |
+
+**Why `resource_local_to_scene = true`:**
+Without this, all trees share ONE material instance. Changing shake_intensity on one tree would shake ALL trees. With `resource_local_to_scene`, each tree gets its own material copy.
+
+**C# analogy:** Custom vertex shader in Unity with `MaterialPropertyBlock` to animate per-instance. Or Shader Graph with a Vertex Displacement node driven by a float property.
 
 ---
 
