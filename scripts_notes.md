@@ -584,7 +584,182 @@ The **glue script** that connects components together via signals. When hurt →
 
 ---
 
+## SmallTree — updated (`scenes/objects/trees/small_tree.gd`)
+
+```gdscript
+extends Sprite2D
+@onready var damage_component: DamageComponent = $DamageComponent
+@onready var hurt_component: HurtComponent = $HurtComponent
+
+var log_scene = preload("res://scenes/objects/trees/log.tscn")
+
+func _ready() -> void:
+    hurt_component.hurt.connect(on_hurt)
+    damage_component.max_damage_reached.connect(on_max_damage_reached)
+
+func on_hurt(hit_damage : int) -> void:
+    damage_component.apply_damage(hit_damage)
+
+func on_max_damage_reached() -> void:
+    call_deferred("add_log_scene")
+    print("max damage reached")
+    queue_free()
+
+func add_log_scene() -> void:
+    var log_instance = log_scene.instantiate() as Node2D
+    log_instance.global_position = global_position
+    get_parent().add_child((log_instance))
+```
+
+**What changed from original:**
+1. **`var log_scene = preload(...)`** — loads the Log scene at parse time (like `using static import` in C#)
+2. **`call_deferred("add_log_scene")`** — schedules `add_log_scene()` for the end of the frame (like `Invoke(() => ...)` in Unity). **Critical:** Can't add children to the scene tree during a physics callback — `call_deferred` defers the add to avoid the "Can't change state while flushing queries" error
+3. **`add_log_scene()`** — instantiates the log, sets its position to the tree's position, adds it to the **parent** of the tree (not the tree itself — the tree is about to be freed)
+4. **`get_parent().add_child()`** — adds the log to the same node that contained the tree (the trees layer in the tilemap), so the log persists in the world
+
+**Key pattern:** `queue_free()` removes the tree immediately, but `call_deferred` ensures the log spawn happens *after* the current frame's physics processing is done. Without this, you'd get the "Can't change state while flushing queries" error.
+
+**C# analogy:** `call_deferred("method_name")` ≈ `Invoke(() => MethodName(), 0f)` in Unity (runs at end of frame). Or `await Task.Yield()` + `MethodName()`.
+
+---
+
+## LargeTree (`scenes/objects/trees/large_tree.gd`)
+
+```gdscript
+extends Sprite2D
+@onready var damage_component: DamageComponent = $DamageComponent
+@onready var hurt_component: HurtComponent = $HurtComponent
+
+var log_scene = preload("res://scenes/objects/trees/log.tscn")
+
+func _ready() -> void:
+    hurt_component.hurt.connect(on_hurt)
+    damage_component.max_damage_reached.connect(on_max_damage_reached)
+
+func on_hurt(hit_damage : int) -> void:
+    damage_component.apply_damage(hit_damage)
+
+func on_max_damage_reached() -> void:
+    call_deferred("add_log_scene")
+    print("max damage reached")
+    queue_free()
+
+func add_log_scene() -> void:
+    var log_instance = log_scene.instantiate() as Node2D
+    log_instance.global_position = global_position
+    get_parent().add_child((log_instance))
+```
+
+**What it does:**
+Identical script to SmallTree — same glue pattern. The difference is in the scene (`.tscn`):
+
+| Property | SmallTree | LargeTree |
+|----------|-----------|-----------|
+| Atlas region | `Rect2(0, 0, 16, 32)` | `Rect2(16, 0, 32, 32)` |
+| Position | `(0, -12)` | `(0, -15)` |
+| HurtComponent collision | `Rect2(10, 23)` | `Rect2(10, 24)` |
+| max_damage | 3 | 5 |
+| StaticBody collision | Circle, r=4 | Circle, r=5 |
+
+**Reusability in action:** Same components (HurtComponent, DamageComponent), same script pattern, just different exported values. The LargeTree takes 5 hits to destroy instead of 3.
+
+**C# analogy:** Same `MonoBehaviour` script, different prefab settings — like having `Tree prefab` with `health=3` and `BigTree prefab` with `health=5` using the same `TreeController.cs`.
+
+---
+
+## CollectableComponent (`scenes/components/collectible_component.gd`)
+
+```gdscript
+class_name CollectableComponent
+extends  Area2D
+
+@export var collectable_name : String
+
+func _on_body_entered(body: Node2D) -> void:
+    if body is Player:
+        print("Collected")
+        get_parent().queue_free()
+```
+
+**What it does:**
+Sits on the Log (or any dropped item). When a body enters its area, it checks if that body is a `Player`. If yes → prints "Collected" → frees its parent (the log node). The `body_entered` signal is connected via the `.tscn` file.
+
+**Key points:**
+
+| Line | What it does | C# Equivalent |
+|------|--------------|---------------|
+| `class_name CollectableComponent` | Globally accessible type | `public class CollectableComponent : Area2D` |
+| `@export var collectable_name : String` | Name of the item (Inspector-editable) | `[Export] public string CollectableName;` |
+| `if body is Player` | Type check — only Player triggers collection | `if (body is Player)` |
+| `get_parent().queue_free()` | Destroys the parent node (the log/item) | `GetParent().QueueFree();` |
+
+**Physics layers (from `.tscn`):**
+- `collision_layer = 32` (Layer 6 — Collectable layer, not yet defined in project settings)
+- `collision_mask = 2` (Layer 2 — Player) — "I detect Player bodies entering me"
+
+**Why `get_parent()` instead of `self`?**
+The CollectableComponent is a *child* of the Log node. If you `queue_free()` the component itself, the log sprite stays in the world orphaned. Freeing the parent removes the entire log scene.
+
+**C# analogy:** A trigger collider `OnTriggerEnter2D` that checks tag == "Player" then `Destroy(transform.parent.gameObject)`.
+
+---
+
+## Log (`scenes/objects/trees/log.tscn`)
+
+No script — purely scene-based:
+- **Sprite2D** — atlas texture from `basic_grass_biom_things.png`, region `Rect2(80, 32, 16, 16)`
+- **CollectableComponent** (instanced) — `collectable_name = "log"`
+- **CollisionShape2D** — CircleShape2D, radius=8, child of CollectableComponent
+
+**What it does:**
+A pickup item spawned when a tree is destroyed. The player walks over it → CollectableComponent detects body_entered → log is freed.
+
+---
+
 ## ChoppingState — updated (`scenes/characters/player/chopping_state.gd`)
+
+```gdscript
+extends NodeState
+
+@export var player : Player
+@export var animated_sprite_2d : AnimatedSprite2D
+@export var hit_component_collision_shape : CollisionShape2D
+
+func _ready() -> void:
+    hit_component_collision_shape.disabled = true
+    hit_component_collision_shape.position = Vector2(0,0)
+
+func _on_process(_delta : float) -> void:
+    pass
+
+func _on_physics_process(_delta : float) -> void:
+    pass
+
+func _on_next_transitions() -> void:
+    if !animated_sprite_2d.is_playing():
+        transition.emit("Idle")
+
+func _on_enter() -> void:
+    if player.player_direction == Vector2.UP:
+        animated_sprite_2d.play("chopping_back")
+        hit_component_collision_shape.position = Vector2(0,-18)
+    elif player.player_direction == Vector2.RIGHT:
+        animated_sprite_2d.play("chopping_right")
+        hit_component_collision_shape.position = Vector2(9,0)
+    elif player.player_direction == Vector2.DOWN:
+        animated_sprite_2d.play("chopping_front")
+        hit_component_collision_shape.position = Vector2(0,3)
+    elif player.player_direction == Vector2.LEFT:
+        animated_sprite_2d.play("chopping_left")
+        hit_component_collision_shape.position = Vector2(-9,0)
+    else:
+        animated_sprite_2d.play("chopping_front")
+    hit_component_collision_shape.disabled = false
+
+func _on_exit() -> void:
+    animated_sprite_2d.stop()
+    hit_component_collision_shape.disabled = true
+```
 
 ```gdscript
 extends NodeState

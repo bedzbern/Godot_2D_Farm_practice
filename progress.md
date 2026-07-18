@@ -2,7 +2,7 @@
 
 Course: **How to Build a Complete 2D Farming Game** (Godot 4.3)
 Link: https://www.youtube.com/watch?v=it0lsREGdmc
-Transcript: `E:\GOdot_Youtube_farming_transcript\yt_transcript_it0lsREGdmc.json` (10,360 entries, timestamps in ms)
+Transcript: `D:\GOdot_Youtube_farming_transcript\yt_transcript_it0lsREGdmc.json` (10,360 entries, timestamps in ms)
 
 ## Ep 1 — Project Setup & Tilemap Layers (0:00 – 21:08)
 
@@ -98,8 +98,13 @@ Transcript: `E:\GOdot_Youtube_farming_transcript\yt_transcript_it0lsREGdmc.json`
 | Adding DamageComponent to SmallTree (max_damage=3) | ~1:47:00 |
 | SmallTree script — connecting hurt→damage→destroy signals | ~1:48:00 |
 | Testing: 3 hits destroys tree ✅ | ~1:50:00 |
+| Creating Log scene (Sprite2D + atlas, CollectableComponent) | ~1:52:00 |
+| Updating SmallTree — spawn log on destroy via call_deferred | ~1:53:00 |
+| CollectableComponent (Area2D, body_entered → queue_free) | ~1:54:00 |
+| Creating LargeTree (same pattern, max_damage=5, 32x32 atlas) | ~1:55:00 |
+| Testing: small + large trees, log drops, collectible pickup ✅ | ~1:55:30 |
 
-*🔄 In Progress — watching from t=6616 (1:50:16). Next: Log scene + CollectableComponent*
+*✅ Completed*
 
 ## All 25 Episode Chapters (Full Video)
 | # | Title | Timestamp |

@@ -27,3 +27,19 @@ Add entries as we learn.
 - HitComponent: layer=8, mask=16 (detects objects)
 - HurtComponent: layer=16, mask=8 (detects tools)
 - Mirror setup ensures only tool↔object interactions trigger, not object↔object or tool↔tool
+
+## call_deferred — Deferred Calls
+- **Never modify the scene tree during a physics callback or collision signal**
+- Use `call_deferred("method_name")` to schedule work for end of frame
+- Common error: "Can't change state while flushing queries" — means you're adding/removing nodes mid-physics
+- C# equivalent: `Invoke(() => ..., 0f)` in Unity
+
+## Spawn-on-Destroy Pattern
+- Object dies → `call_deferred("spawn_item")` → `queue_free()`
+- Spawn method: instantiate scene, set `global_position`, add to `get_parent()` (not to self — you're being freed)
+- `preload()` for scenes you always need, `load()` for ones you might not
+
+## CollectableComponent Pattern
+- Area2D + `body_entered` signal → check `if body is Player` → `get_parent().queue_free()`
+- Free parent (the item node), not self (the component) — otherwise the sprite orphan persists
+- collision_layer = Collectable layer, collision_mask = Player layer

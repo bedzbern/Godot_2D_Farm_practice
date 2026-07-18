@@ -46,19 +46,21 @@ Godot 2D Farm Game (practice project)
 | 9 | 2026-07-10 | Finished Ep 5 (up to 1:28:14 / t=5294). Created InteractableComponent, Door scene with open/close, collision layers setup. Debug prints commented out. | Start Ep 6 — Creating choppable trees |
 | 10 | 2026-07-12 | Started Ep 6 — Choppable Trees (t=5499 / 1:31:39). Watching intro. | Continue Ep 6 — HitComponent, HurtComponent, DamageComponent, SmallTree, Log |
 | 11 | 2026-07-15 | Finished Ep 6 up to t=6616 (1:50:16). Created HitComponent, HurtComponent, DamageComponent, SmallTree, test_scene_object_trees. Updated ChoppingState with hit detection. Tree chopping working (3 hits to destroy). | Continue Ep 6 — Log scene, CollectableComponent (from ~1:50:16) |
+| 12 | 2026-07-18 | Finished Ep 6 (up to t=6951 / 1:55:51). Created Log scene (Sprite2D + CollectableComponent), CollectableComponent (Area2D), updated SmallTree to spawn log on destroy, created LargeTree (max_damage=5), created small_house.tscn & medium_house.tscn. Fixed transcript path (E:→D:). | Start Ep 7 — Tree shake vertex shader (1:56:10) |
 
 ## Current State
-- **Watching Episode 6** at t=6616 (1:50:16) — about to create Log scene and CollectableComponent
-- Tree chopping system fully working: Hit → Hurt → Damage → destroy (3 hits)
-- **Still need to create:** Log scene (Sprite2D with atlas), CollectableComponent (Area2D, body_entered, frees parent)
-- Player-side chopping: `chopping_state.gd` updated with hit_component_collision_shape (disabled by default, enabled per swing direction)
-- Project structure: 16 GDScripts, 15 scenes, 2 TileSets
+- **Finished Episode 6** at t=6951 (1:55:51) — full tree system complete
+- Complete tree destruction flow: Player chops → HitComponent hits → HurtComponent filters tool → DamageComponent tracks health → on destroy → Log spawned via `call_deferred` → CollectableComponent picks up on player contact
+- Two tree variants: SmallTree (3 hp, 16x32 atlas) and LargeTree (5 hp, 32x32 atlas, higher y-sort position)
+- Three house variants: large_house, medium_house, small_house — all using same house_tile_set.tres
+- **Next: Episode 7** — Tree shake vertex shader (1:56:10)
+- Project structure: 17 GDScripts, 21 scenes, 2 TileSets
 - Physics layers: Ground (1), Player (2), Interactable (3), Tool (4), Object (5)
 - Test scenes: `test_scene_tilemap`, `test_scene_player`, `test_scene_house_tilemap`, `test_scene_object_trees`
 - All keyword conventions active: "UPDATE MY MD'S", "push git", "explain the code"
 
 ## Reference Files
-- **YouTube Transcript**: `E:\GOdot_Youtube_farming_transcript\yt_transcript_it0lsREGdmc.json`
+- **YouTube Transcript**: `D:\GOdot_Youtube_farming_transcript\yt_transcript_it0lsREGdmc.json` (10,360 entries, timestamps in ms)
   - Full transcript (10,360 entries) with timestamps in ms
   - When user gives a YouTube timestamp (`t=SECONDS`), search by `offset` field to find matching dialogue
 

@@ -101,3 +101,15 @@ Short dated entries of what we did.
 - Created `scenes/test/test_scene_object_trees.tscn` — test scene with tilemap, trees layer, player (current_tool=AxeWood)
 - Tested: 3 axe hits destroys tree ✅
 - Next: Create Log scene + CollectableComponent (from ~1:50:16)
+
+## 2026-07-18 (Session 12)
+- Watched Episode 6 from 1:50:16 to 1:55:51 (t=6951) — finished Ep 6
+- Created `scenes/components/collectible_component.gd` + `.tscn` — Area2D, `body_entered` signal, checks `body is Player`, `get_parent().queue_free()`, collision_layer=32, collision_mask=2
+- Created `scenes/objects/trees/log.tscn` — Sprite2D (atlas region 80,32 16x16), CollectableComponent (collectable_name="log"), CollisionShape2D (circle radius=8)
+- Updated `scenes/objects/trees/small_tree.gd` — added `log_scene = preload(...)`, `add_log_scene()` method called via `call_deferred()` on max damage, spawns log at tree position on parent
+- Created `scenes/objects/trees/large_tree.gd` + `.tscn` — same pattern as SmallTree, max_damage=5, atlas region (16,0, 32x32), RectangleShape2D hurt collision (10x24), position=(0,-15)
+- Created `scenes/Houses/medium_house.tscn` — same tileset (house_tile_set.tres), different tile layout
+- Created `scenes/Houses/small_house.tscn` — same tileset, smallest variant
+- Fixed transcript path in Agent.md and progress.md (E: → D:)
+- Pulled latest git, repo was up to date
+- Next: Episode 7 — Tree shake vertex shader (1:56:10)
